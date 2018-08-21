@@ -14,6 +14,8 @@ import java.util.Set;
 @Table(name = "customers")
 public class CustomerEntity implements Serializable {
 
+    @Version
+    public int version;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
