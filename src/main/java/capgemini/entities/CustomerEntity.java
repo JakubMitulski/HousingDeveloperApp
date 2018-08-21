@@ -1,5 +1,7 @@
 package capgemini.entities;
 
+import capgemini.entities.listeners.CreateListener;
+import capgemini.entities.listeners.UpdateListener;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,8 +13,10 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@EntityListeners({CreateListener.class, UpdateListener.class})
 @Table(name = "customers")
-public class CustomerEntity implements Serializable {
+public class CustomerEntity extends AbstractEntity implements Serializable {
 
     @Version
     public int version;
