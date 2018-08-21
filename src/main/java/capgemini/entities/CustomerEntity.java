@@ -7,8 +7,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -19,7 +19,7 @@ import java.util.Set;
 public class CustomerEntity extends AbstractEntity implements Serializable {
 
     @Version
-    public int version;
+    private int version;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -35,6 +35,6 @@ public class CustomerEntity extends AbstractEntity implements Serializable {
             joinColumns = {@JoinColumn(name = "apartment_id", nullable = false, updatable = false)},
             inverseJoinColumns = {@JoinColumn(name = "customer_id", nullable = false, updatable = false)}
     )
-    private Set<CustomerEntity> apartments = new HashSet<>();
+    private Collection<ApartmentEntity> apartments = new HashSet<>();
 
 }

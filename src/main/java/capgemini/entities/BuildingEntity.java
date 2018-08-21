@@ -19,7 +19,7 @@ import java.util.HashSet;
 public class BuildingEntity extends AbstractEntity implements Serializable {
 
     @Version
-    public int version;
+    private int version;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

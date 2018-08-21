@@ -14,10 +14,10 @@ import java.io.Serializable;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @EntityListeners({CreateListener.class, UpdateListener.class})
 @Table(name = "apartments")
-public class ApartmentEntity extends AbstractEntity implements Serializable{
+public class ApartmentEntity extends AbstractEntity implements Serializable {
 
     @Version
-    public int version;
+    private int version;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
