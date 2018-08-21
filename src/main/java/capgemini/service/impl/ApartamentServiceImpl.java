@@ -2,27 +2,47 @@ package capgemini.service.impl;
 
 import capgemini.dto.ApartmentTo;
 import capgemini.entities.ApartmentEntity;
+import capgemini.entities.BuildingEntity;
 import capgemini.exception.ApartmentNotFoundException;
 import capgemini.mappers.ApartmentMapper;
 import capgemini.repository.ApartmentRepository;
+import capgemini.repository.BuildingRepository;
 import capgemini.service.ApartmentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ApartamentServiceImpl implements ApartmentService {
 
-    private final ApartmentRepository apartmentRepository;
+    @Autowired
+    private ApartmentRepository apartmentRepository;
 
-    public ApartamentServiceImpl(ApartmentRepository apartmentRepository) {
-        this.apartmentRepository = apartmentRepository;
-    }
+    @Autowired
+    private BuildingRepository buildingRepository;
 
     @Override
     public void addNewApartment(ApartmentTo apartmentTo) {
-        apartmentRepository.save(ApartmentMapper.toApartmentEntity(apartmentTo));
+        ApartmentEntity apartmentEntity = ApartmentMapper.toApartmentEntity(apartmentTo);
+
+        BuildingEntity buildingEntity = buildingRepository.findById(apartmentTo.getBuildingId()).get();
+        apartmentEntity.setBuilding(buildingEntity);
+
+        apartmentRepository.save(apartmentEntity);
     }
 
     @Override
-    public ApartmentEntity findApartmentById(Long id) {
-        return apartmentRepository.findById(id).orElseThrow(ApartmentNotFoundException::new);
+    public ApartmentTo findApartmentById(Long id) {
+        ApartmentEntity apartmentEntity = apartmentRepository.findById(id).orElseThrow(ApartmentNotFoundException::new);
+        return ApartmentMapper.toApartmentTo(apartmentEntity);
+    }
+
+    @Override
+    public ApartmentTo findApartmentByAddress(String address) {
+        ApartmentEntity apartmentEntity = apartmentRepository.findByAddress(address);
+        if (apartmentEntity == null) {
+            throw new ApartmentNotFoundException();
+        }
+        return ApartmentMapper.toApartmentTo(apartmentEntity);
     }
 
     @Override

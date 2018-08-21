@@ -20,6 +20,7 @@ public class ApartmentMapper {
                 .withBalconiesNumber(apartmentEntity.getBalconiesNumber())
                 .withfloor(apartmentEntity.getFloor())
                 .withAddress(apartmentEntity.getAddress())
+                .withStatus(apartmentEntity.getStatus())
                 .withBuildingId(apartmentEntity.getBuilding().getId())
                 .build();
     }
@@ -36,6 +37,7 @@ public class ApartmentMapper {
         apartmentEntity.setBalconiesNumber(apartmentTo.getBalconiesNumber());
         apartmentEntity.setFloor(apartmentTo.getFloor());
         apartmentEntity.setAddress(apartmentTo.getAddress());
+        apartmentEntity.setStatus(apartmentTo.getStatus());
 
         return apartmentEntity;
     }

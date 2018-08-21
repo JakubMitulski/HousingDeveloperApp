@@ -15,7 +15,7 @@ public abstract class AbstractEntity {
     private Date created;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated", nullable = false)
+    @Column(name = "updated")
     private Date updated;
 
     public Date getCreated() {

@@ -5,4 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ApartmentRepository extends CrudRepository<ApartmentEntity, Long> {
 
+    ApartmentEntity findByAddress(String address);
+
 }

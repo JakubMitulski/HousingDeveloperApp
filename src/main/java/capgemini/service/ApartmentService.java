@@ -1,13 +1,14 @@
 package capgemini.service;
 
 import capgemini.dto.ApartmentTo;
-import capgemini.entities.ApartmentEntity;
 
 public interface ApartmentService {
 
     void addNewApartment(ApartmentTo apartmentTo);
 
-    ApartmentEntity findApartmentById(Long id);
+    ApartmentTo findApartmentById(Long id);
+
+    ApartmentTo findApartmentByAddress(String address);
 
     void updateApartment(ApartmentTo apartmentTo);
 

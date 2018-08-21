@@ -1,6 +1,5 @@
 package capgemini.mappers;
 
-import capgemini.dto.ApartmentTo;
 import capgemini.dto.BuildingTo;
 import capgemini.entities.ApartmentEntity;
 import capgemini.entities.BuildingEntity;
