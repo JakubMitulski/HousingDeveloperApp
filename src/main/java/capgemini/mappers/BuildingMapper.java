@@ -24,7 +24,7 @@ public class BuildingMapper {
                 .withApartmentIds(buildingEntity.getApartments()
                         .stream()
                         .map(ApartmentEntity::getId)
-                        .collect(Collectors.toSet()))
+                        .collect(Collectors.toList()))
                 .build();
     }
 

@@ -2,7 +2,6 @@ package capgemini.service;
 
 import capgemini.dto.ApartmentTo;
 import capgemini.dto.BuildingTo;
-import capgemini.exception.ApartmentNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,11 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = "spring.profiles.active=hsql")
-public class ApartmentServiceTest {
+public class BuildingServiceTest {
 
     @Autowired
     private ApartmentService apartmentService;
@@ -56,44 +54,9 @@ public class ApartmentServiceTest {
 
     @Test
     @Transactional
-    public void shouldFindApartmentById() {
+    public void shouldUpdateBuilding() {
         //When
-        ApartmentTo apartmentById = apartmentService.findApartmentById(apartment.getId());
-
-        //Then
-        assertEquals(apartment.getAddress(), apartmentById.getAddress());
-    }
-
-    @Test
-    @Transactional
-    public void shouldUpdateApartment() {
-        //When
-        apartment.setStatus("Booked");
-        ApartmentTo updatedApartment = apartmentService.updateApartment(apartment);
-
-        //Then
-        assertEquals("Booked", updatedApartment.getStatus());
-    }
-
-    @Test(expected = ApartmentNotFoundException.class)
-    @Transactional
-    public void shouldDeleteApartment() {
-        //When
-        Long apartmentId = apartment.getId();
-        Long buildingId = apartment.getBuildingId();
-        apartmentService.deleteApartment(apartment);
-        BuildingTo buildingById = buildingService.findBuildingById(buildingId);
-
-        //Then
-        assertTrue(buildingById.getApartmentIds().isEmpty());
-        apartmentService.findApartmentById(apartmentId);
-    }
-
-    @Test
-    @Transactional
-    public void shouldAddNewApartment() {
-        //Given
-        ApartmentTo testApartment = new ApartmentTo.ApartmentToBuilder()
+        ApartmentTo apartmentTo = new ApartmentTo.ApartmentToBuilder()
                 .withArea(42.0)
                 .withRoomsNumber(2)
                 .withBalconiesNumber(1)
@@ -102,14 +65,58 @@ public class ApartmentServiceTest {
                 .withStatus("Bought")
                 .withBuildingId(building.getId())
                 .build();
+        apartment = apartmentService.addNewApartment(apartmentTo);
+
+        BuildingTo buildingById = buildingService.findBuildingById(building.getId());
+        buildingById.setDescription("Updated description");
+        BuildingTo updatedBuilding = buildingService.updateBuilding(buildingById);
+
+        //Then
+        assertEquals(apartment.getId(), updatedBuilding.getApartmentIds().get(1));
+        assertEquals("Updated description", updatedBuilding.getDescription());
+    }
+
+    @Test
+    @Transactional
+    public void shouldAddNewBuilding() {
+        //Given
+        BuildingTo buildingTo = new BuildingTo.BuildingToBuilder()
+                .withDescription("Test description")
+                .withLocation("Test location")
+                .withFloorsNumber(2)
+                .withElevator(false)
+                .withApartmentsNumber(12)
+                .withApartmentIds(new ArrayList<>())
+                .build();
 
         //When
-        ApartmentTo addedApartment = apartmentService.addNewApartment(testApartment);
-        ApartmentTo apartmentById = apartmentService.findApartmentById(addedApartment.getId());
+        BuildingTo testBuilding = buildingService.addNewBuilding(buildingTo);
+        BuildingTo buildingById = buildingService.findBuildingById(testBuilding.getId());
+
+        //Then
+        assertEquals(testBuilding.getId(), buildingById.getId());
+    }
+
+    @Test(expected = RuntimeException.class)
+    @Transactional
+    public void shouldDeleteBuildingWithApartment() {
+        //When
+        Long buildingId = building.getId();
+        Long apartmentId = building.getApartmentIds().get(0);
+        buildingService.deleteBuilding(building);
+
+        //Then
+        buildingService.findBuildingById(buildingId);
+        apartmentService.findApartmentById(apartmentId);
+    }
+
+    @Test
+    @Transactional
+    public void shouldFindBuildingById() {
+        //When
         BuildingTo buildingById = buildingService.findBuildingById(building.getId());
 
         //Then
-        assertEquals(addedApartment.getAddress(), apartmentById.getAddress());
-        assertTrue(buildingById.getApartmentIds().contains(apartmentById.getId()));
+        assertEquals(buildingById.getDescription(), building.getDescription());
     }
 }

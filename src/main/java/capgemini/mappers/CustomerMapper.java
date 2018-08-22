@@ -35,6 +35,7 @@ public class CustomerMapper {
         customerEntity.setId(customerTo.getId());
         customerEntity.setFirstName(customerTo.getFirstName());
         customerEntity.setLastName(customerTo.getLastName());
+        customerEntity.setPhone(customerTo.getPhone());
 
         return customerEntity;
     }

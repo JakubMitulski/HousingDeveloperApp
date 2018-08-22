@@ -4,13 +4,13 @@ import capgemini.dto.BuildingTo;
 
 public interface BuildingService {
 
-    void addNewBuilding(BuildingTo buildingTo);
+    BuildingTo addNewBuilding(BuildingTo buildingTo);
 
     BuildingTo findBuildingById(Long id);
 
     BuildingTo findBuildingByLocation(String location);
 
-    void updateBuilding(BuildingTo buildingTo);
+    BuildingTo updateBuilding(BuildingTo buildingTo);
 
     void deleteBuilding(BuildingTo buildingTo);
 

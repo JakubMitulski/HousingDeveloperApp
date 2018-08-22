@@ -2,13 +2,16 @@ package capgemini.entities;
 
 import capgemini.entities.listeners.CreateListener;
 import capgemini.entities.listeners.UpdateListener;
+import capgemini.exception.ApartmentNotFoundException;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 @Getter
 @Setter
@@ -35,6 +38,18 @@ public class BuildingEntity extends AbstractEntity implements Serializable {
     private Integer apartmentsNumber;
 
     @OneToMany(mappedBy = "building", cascade = CascadeType.REMOVE)
-    private Collection<ApartmentEntity> apartments = new HashSet<>();
+    private List<ApartmentEntity> apartments = new ArrayList<>();
 
+    public void addApartmentToBuilding(ApartmentEntity apartmentEntity) {
+        this.apartments.add(apartmentEntity);
+    }
+
+    public void removeApartmentFromBuilding(ApartmentEntity apartmentEntity) {
+        ApartmentEntity entity = this.apartments
+                .stream()
+                .filter(apartment -> apartment.getId() == apartmentEntity.getId())
+                .findAny()
+                .orElseThrow(ApartmentNotFoundException::new);
+        this.apartments.remove(entity);
+    }
 }

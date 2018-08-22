@@ -21,13 +21,18 @@ public class ApartamentServiceImpl implements ApartmentService {
     private BuildingRepository buildingRepository;
 
     @Override
-    public void addNewApartment(ApartmentTo apartmentTo) {
+    public ApartmentTo addNewApartment(ApartmentTo apartmentTo) {
         ApartmentEntity apartmentEntity = ApartmentMapper.toApartmentEntity(apartmentTo);
 
         BuildingEntity buildingEntity = buildingRepository.findById(apartmentTo.getBuildingId()).get();
         apartmentEntity.setBuilding(buildingEntity);
 
-        apartmentRepository.save(apartmentEntity);
+        ApartmentEntity savedApartment = apartmentRepository.save(apartmentEntity);
+
+        buildingEntity.addApartmentToBuilding(apartmentEntity);
+        buildingRepository.save(buildingEntity);
+
+        return ApartmentMapper.toApartmentTo(savedApartment);
     }
 
     @Override
@@ -46,11 +51,17 @@ public class ApartamentServiceImpl implements ApartmentService {
     }
 
     @Override
-    public void updateApartment(ApartmentTo apartmentTo) {
+    public ApartmentTo updateApartment(ApartmentTo apartmentTo) {
         if (apartmentTo.getId() == null || !apartmentRepository.existsById(apartmentTo.getId())) {
             throw new ApartmentNotFoundException();
         }
-        apartmentRepository.save(ApartmentMapper.toApartmentEntity(apartmentTo));
+        ApartmentEntity apartmentEntity = ApartmentMapper.toApartmentEntity(apartmentTo);
+
+        BuildingEntity buildingEntity = buildingRepository.findById(apartmentTo.getBuildingId()).get();
+        apartmentEntity.setBuilding(buildingEntity);
+
+        ApartmentEntity updatedApartment = apartmentRepository.save(apartmentEntity);
+        return ApartmentMapper.toApartmentTo(updatedApartment);
     }
 
     @Override
@@ -58,6 +69,12 @@ public class ApartamentServiceImpl implements ApartmentService {
         if (apartmentTo.getId() == null || !apartmentRepository.existsById(apartmentTo.getId())) {
             throw new ApartmentNotFoundException();
         }
+        ApartmentEntity apartmentEntity = ApartmentMapper.toApartmentEntity(apartmentTo);
+
+        BuildingEntity buildingEntity = buildingRepository.findById(apartmentTo.getBuildingId()).get();
+        buildingEntity.removeApartmentFromBuilding(apartmentEntity);
+        buildingRepository.save(buildingEntity);
+
         apartmentRepository.deleteById(apartmentTo.getId());
     }
 }
