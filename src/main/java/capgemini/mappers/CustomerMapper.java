@@ -22,7 +22,7 @@ public class CustomerMapper {
                 .withApartmentIds(customerEntity.getApartments()
                         .stream()
                         .map(ApartmentEntity::getId)
-                        .collect(Collectors.toSet()))
+                        .collect(Collectors.toList()))
                 .build();
     }
 

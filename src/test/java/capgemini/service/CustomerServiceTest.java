@@ -2,7 +2,7 @@ package capgemini.service;
 
 import capgemini.dto.ApartmentTo;
 import capgemini.dto.BuildingTo;
-import capgemini.exception.ApartmentNotFoundException;
+import capgemini.dto.CustomerTo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,11 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = "spring.profiles.active=hsql")
-public class ApartmentServiceTest {
+public class CustomerServiceTest {
 
     @Autowired
     private ApartmentService apartmentService;
@@ -27,11 +26,23 @@ public class ApartmentServiceTest {
     @Autowired
     private BuildingService buildingService;
 
+    @Autowired
+    private CustomerService customerService;
+
     private ApartmentTo apartment;
     private BuildingTo building;
+    private CustomerTo customer;
 
     @Before
     public void init() {
+        CustomerTo customerTo = new CustomerTo.CustomerToBuilder()
+                .withFirstName("jan")
+                .withLastName("kowalski")
+                .withPhone(77777777L)
+                .withApartmentIds(new ArrayList<>())
+                .build();
+        customer = customerService.addNewCustomer(customerTo);
+
         BuildingTo buildingTo = new BuildingTo.BuildingToBuilder()
                 .withDescription("Test description")
                 .withLocation("Test location")
@@ -57,70 +68,52 @@ public class ApartmentServiceTest {
 
     @Test
     @Transactional
-    public void shouldFindApartmentById() {
+    public void shouldFindCustomerById() {
         //When
-        ApartmentTo apartmentById = apartmentService.findApartmentById(apartment.getId());
+        CustomerTo customerById = customerService.findCustomerById(customer.getId());
 
         //Then
-        assertEquals(apartment.getAddress(), apartmentById.getAddress());
+        assertEquals(customerById.getLastName(), customer.getLastName());
     }
 
     @Test
     @Transactional
-    public void shouldUpdateApartment() {
+    public void shouldUpdateCustomer() {
         //When
-        apartment.setStatus("Booked");
-        ApartmentTo updatedApartment = apartmentService.updateApartment(apartment);
+        customer.setFirstName("Updated name");
+        CustomerTo updatedCustomer = customerService.updateCustomer(customer);
 
         //Then
-        assertEquals("Booked", updatedApartment.getStatus());
-    }
-
-    @Test(expected = ApartmentNotFoundException.class)
-    @Transactional
-    public void shouldDeleteApartment() {
-        //When
-        Long apartmentId = apartment.getId();
-        Long buildingId = apartment.getBuildingId();
-        apartmentService.deleteApartment(apartment);
-        BuildingTo buildingById = buildingService.findBuildingById(buildingId);
-
-        //Then
-        assertTrue(buildingById.getApartmentIds().isEmpty());
-        apartmentService.findApartmentById(apartmentId);
+        assertEquals("Updated name", updatedCustomer.getFirstName());
     }
 
     @Test
     @Transactional
-    public void shouldAddNewApartment() {
+    public void shouldAddNewCustomer() {
         //Given
-        ApartmentTo testApartment = new ApartmentTo.ApartmentToBuilder()
-                .withArea(42.0)
-                .withRoomsNumber(2)
-                .withBalconiesNumber(1)
-                .withfloor(2)
-                .withAddress("Test address")
-                .withStatus("Bought")
-                .withBuildingId(building.getId())
+        CustomerTo customerTo = new CustomerTo.CustomerToBuilder()
+                .withFirstName("jan")
+                .withLastName("nowak")
+                .withPhone(77777777L)
+                .withApartmentIds(new ArrayList<>())
                 .build();
 
         //When
-        ApartmentTo addedApartment = apartmentService.addNewApartment(testApartment);
-        ApartmentTo apartmentById = apartmentService.findApartmentById(addedApartment.getId());
-        BuildingTo buildingById = buildingService.findBuildingById(building.getId());
+        customer = customerService.addNewCustomer(customerTo);
+        CustomerTo customerById = customerService.findCustomerById(customer.getId());
 
         //Then
-        assertEquals(addedApartment.getAddress(), apartmentById.getAddress());
-        assertTrue(buildingById.getApartmentIds().contains(apartmentById.getId()));
+        assertEquals(customerTo.getLastName(), customer.getLastName());
+        assertEquals(customer.getId(), customerById.getId());
     }
 
     @Test(expected = OptimisticLockingFailureException.class)
     @Transactional
     public void shouldTestOptimisticLookingException() {
         //When
-        apartment.setStatus("Successful update");
-        apartmentService.updateApartment(apartment);
-        apartment.setStatus("Optimistic failure exception");
-        apartmentService.updateApartment(apartment);
+        customer.setLastName("Successful update");
+        customerService.updateCustomer(customer);
+        customer.setLastName("Optimistic failure exception");
+        customerService.updateCustomer(customer);
     }
 }

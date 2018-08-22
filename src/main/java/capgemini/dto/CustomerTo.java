@@ -5,8 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -20,7 +21,7 @@ public class CustomerTo {
     private String firstName;
     private String lastName;
     private Long phone;
-    private Collection<Long> apartmentIds = new HashSet<>();
+    private List<Long> apartmentIds = new ArrayList<>();
 
     public static CustomerToBuilder builder() {
         return new CustomerToBuilder();
@@ -33,7 +34,7 @@ public class CustomerTo {
         private String firstName;
         private String lastName;
         private Long phone;
-        private Collection<Long> apartmentIds;
+        private List<Long> apartmentIds;
 
         public CustomerToBuilder withVersion(int version) {
             this.version = version;
@@ -60,7 +61,7 @@ public class CustomerTo {
             return this;
         }
 
-        public CustomerToBuilder withApartmentIds(Collection<Long> apartmentIds) {
+        public CustomerToBuilder withApartmentIds(List<Long> apartmentIds) {
             this.apartmentIds = apartmentIds;
             return this;
         }
