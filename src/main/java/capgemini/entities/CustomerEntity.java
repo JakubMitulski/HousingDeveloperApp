@@ -7,8 +7,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,11 +30,15 @@ public class CustomerEntity extends AbstractEntity implements Serializable {
     @Column(nullable = false)
     private Long phone;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "apartments_customers",
             joinColumns = {@JoinColumn(name = "apartment_id", nullable = false, updatable = false)},
             inverseJoinColumns = {@JoinColumn(name = "customer_id", nullable = false, updatable = false)}
     )
-    private Collection<ApartmentEntity> apartments = new HashSet<>();
+    private List<ApartmentEntity> apartments = new ArrayList<>();
+
+    public void addApartmentToCustomer(ApartmentEntity apartmentEntity) {
+        this.apartments.add(apartmentEntity);
+    }
 
 }

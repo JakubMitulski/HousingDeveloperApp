@@ -51,5 +51,4 @@ public class BuildingMapper {
     public static List<BuildingEntity> map2Entities(List<BuildingTo> buildingTos) {
         return buildingTos.stream().map(BuildingMapper::toBuildingEntity).collect(Collectors.toList());
     }
-
 }

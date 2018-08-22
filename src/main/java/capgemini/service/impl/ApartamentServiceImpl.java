@@ -7,6 +7,7 @@ import capgemini.exception.ApartmentNotFoundException;
 import capgemini.mappers.ApartmentMapper;
 import capgemini.repository.ApartmentRepository;
 import capgemini.repository.BuildingRepository;
+import capgemini.repository.CustomerRepository;
 import capgemini.service.ApartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,9 @@ public class ApartamentServiceImpl implements ApartmentService {
 
     @Autowired
     private BuildingRepository buildingRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @Override
     public ApartmentTo addNewApartment(ApartmentTo apartmentTo) {

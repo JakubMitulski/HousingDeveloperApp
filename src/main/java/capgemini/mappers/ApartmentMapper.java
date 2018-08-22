@@ -48,5 +48,4 @@ public class ApartmentMapper {
     public static List<ApartmentEntity> map2Entities(List<ApartmentTo> apartmentTos) {
         return apartmentTos.stream().map(ApartmentMapper::toApartmentEntity).collect(Collectors.toList());
     }
-
 }
