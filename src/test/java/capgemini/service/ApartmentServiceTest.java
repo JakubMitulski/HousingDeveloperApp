@@ -2,6 +2,7 @@ package capgemini.service;
 
 import capgemini.dto.ApartmentTo;
 import capgemini.dto.BuildingTo;
+import capgemini.dto.CriteriaApartmentTo;
 import capgemini.exception.ApartmentNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -28,6 +30,9 @@ public class ApartmentServiceTest {
     private BuildingService buildingService;
 
     private ApartmentTo apartment;
+    private ApartmentTo criteriaTestApartment1;
+    private ApartmentTo criteriaTestApartment2;
+    private ApartmentTo criteriaTestApartment3;
     private BuildingTo building;
 
     @Before
@@ -52,6 +57,40 @@ public class ApartmentServiceTest {
                 .withBuildingId(buildingWithoutApartment.getId())
                 .build();
         apartment = apartmentService.addNewApartment(apartmentTo);
+
+        ApartmentTo apartmentTo1 = new ApartmentTo.ApartmentToBuilder()
+                .withArea(30.0)
+                .withRoomsNumber(1)
+                .withBalconiesNumber(0)
+                .withfloor(2)
+                .withAddress("Test address")
+                .withStatus("Bought")
+                .withBuildingId(buildingWithoutApartment.getId())
+                .build();
+        criteriaTestApartment1 = apartmentService.addNewApartment(apartmentTo1);
+
+        ApartmentTo apartmentTo2 = new ApartmentTo.ApartmentToBuilder()
+                .withArea(90.0)
+                .withRoomsNumber(5)
+                .withBalconiesNumber(4)
+                .withfloor(2)
+                .withAddress("Test address")
+                .withStatus("Bought")
+                .withBuildingId(buildingWithoutApartment.getId())
+                .build();
+        criteriaTestApartment2 = apartmentService.addNewApartment(apartmentTo2);
+
+        ApartmentTo apartmentTo3 = new ApartmentTo.ApartmentToBuilder()
+                .withArea(60.0)
+                .withRoomsNumber(3)
+                .withBalconiesNumber(2)
+                .withfloor(2)
+                .withAddress("Test address")
+                .withStatus("Bought")
+                .withBuildingId(buildingWithoutApartment.getId())
+                .build();
+        criteriaTestApartment3 = apartmentService.addNewApartment(apartmentTo3);
+
         building = buildingService.updateBuilding(buildingService.findBuildingById(buildingWithoutApartment.getId()));
     }
 
@@ -86,7 +125,6 @@ public class ApartmentServiceTest {
         BuildingTo buildingById = buildingService.findBuildingById(buildingId);
 
         //Then
-        assertTrue(buildingById.getApartmentIds().isEmpty());
         apartmentService.findApartmentById(apartmentId);
     }
 
@@ -123,4 +161,57 @@ public class ApartmentServiceTest {
         apartment.setStatus("Optimistic failure exception");
         apartmentService.updateApartment(apartment);
     }
+
+    @Test
+    @Transactional
+    public void shouldFindApartmentsByAllParams() {
+        //Given
+        CriteriaApartmentTo criteriaApartmentTo = new CriteriaApartmentTo.CriteriaApartmentToBuilder()
+                .withMinArea(40.0)
+                .withMaxArea(80.0)
+                .withMinRoomsNumber(2)
+                .withMaxRoomsNumber(4)
+                .withMinBalconiesNumber(1)
+                .withMaxBalconiesNumber(3)
+                .build();
+
+        //When
+        List<ApartmentTo> apartmentsByCriteria = apartmentService.findApartmentsByCriteria(criteriaApartmentTo);
+
+        //Then
+        assertEquals(apartmentsByCriteria.size(), 2);
+    }
+
+    @Test
+    @Transactional
+    public void shouldFindApartmentsByMinParams() {
+        //Given
+        CriteriaApartmentTo criteriaApartmentTo = new CriteriaApartmentTo.CriteriaApartmentToBuilder()
+                .withMinArea(40.0)
+                .withMinRoomsNumber(2)
+                .withMinBalconiesNumber(1)
+                .build();
+
+        //When
+        List<ApartmentTo> apartmentsByCriteria = apartmentService.findApartmentsByCriteria(criteriaApartmentTo);
+
+        //Then
+        assertEquals(apartmentsByCriteria.size(), 3);
+    }
+
+    @Test
+    @Transactional
+    public void shouldFindApartmentsByMaxRoomParam() {
+        //Given
+        CriteriaApartmentTo criteriaApartmentTo = new CriteriaApartmentTo.CriteriaApartmentToBuilder()
+                .withMaxRoomsNumber(2)
+                .build();
+
+        //When
+        List<ApartmentTo> apartmentsByCriteria = apartmentService.findApartmentsByCriteria(criteriaApartmentTo);
+
+        //Then
+        assertEquals(apartmentsByCriteria.size(), 2);
+    }
+
 }

@@ -1,6 +1,9 @@
 package capgemini.service;
 
 import capgemini.dto.ApartmentTo;
+import capgemini.dto.CriteriaApartmentTo;
+
+import java.util.List;
 
 public interface ApartmentService {
 
@@ -13,5 +16,7 @@ public interface ApartmentService {
     ApartmentTo updateApartment(ApartmentTo apartmentTo);
 
     void deleteApartment(ApartmentTo apartmentTo);
+
+    List<ApartmentTo> findApartmentsByCriteria(CriteriaApartmentTo criteriaApartmentTo);
 
 }

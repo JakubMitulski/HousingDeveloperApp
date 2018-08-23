@@ -1,6 +1,7 @@
 package capgemini.service.impl;
 
 import capgemini.dto.ApartmentTo;
+import capgemini.dto.CriteriaApartmentTo;
 import capgemini.entities.ApartmentEntity;
 import capgemini.entities.BuildingEntity;
 import capgemini.exception.ApartmentNotFoundException;
@@ -8,15 +9,21 @@ import capgemini.mappers.ApartmentMapper;
 import capgemini.repository.ApartmentRepository;
 import capgemini.repository.BuildingRepository;
 import capgemini.repository.CustomerRepository;
+import capgemini.repository.CustomizedApartmentRepository;
 import capgemini.service.ApartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ApartamentServiceImpl implements ApartmentService {
 
     @Autowired
     private ApartmentRepository apartmentRepository;
+
+    @Autowired
+    private CustomizedApartmentRepository customizedApartmentRepository;
 
     @Autowired
     private BuildingRepository buildingRepository;
@@ -80,5 +87,11 @@ public class ApartamentServiceImpl implements ApartmentService {
         buildingRepository.save(buildingEntity);
 
         apartmentRepository.deleteById(apartmentTo.getId());
+    }
+
+    @Override
+    public List<ApartmentTo> findApartmentsByCriteria(CriteriaApartmentTo criteriaApartmentTo) {
+        List<ApartmentEntity> apartmentEntities = customizedApartmentRepository.findApartmentsByCriteria(criteriaApartmentTo);
+        return ApartmentMapper.map2Tos(apartmentEntities);
     }
 }
