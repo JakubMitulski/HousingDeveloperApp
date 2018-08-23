@@ -71,7 +71,7 @@ public class CustomerServiceTest {
                 .withBalconiesNumber(3)
                 .withfloor(7)
                 .withAddress("Some address")
-                .withStatus("Some status")
+                .withStatus("Bought")
                 .withBuildingId(buildingWithoutApartment.getId())
                 .build();
         testApartment1 = apartmentService.addNewApartment(apartmentToTest1);
@@ -239,5 +239,15 @@ public class CustomerServiceTest {
         assertEquals(apartmentById.getStatus(), "BOOKED");
         assertEquals(customerAfterFirstSingleBooking.getApartmentIds().get(0), testApartment1.getId());
         customerService.bookApartment(testApartment5, customerAfterFirstDoubleBooking);
+    }
+
+    @Test
+    @Transactional
+    public void shouldFindCustomersWhoBoughtMoreThanOneApartment() {
+        //When
+        List<CustomerTo> customers = customerService.findCustomersWhoBoughtMoreThanOneApartment();
+
+        //Then
+        assertEquals(1, customers.size());
     }
 }

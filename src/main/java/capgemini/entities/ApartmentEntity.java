@@ -33,6 +33,8 @@ public class ApartmentEntity extends AbstractEntity implements Serializable {
     private String address;
     @Column(nullable = false)
     private String status;
+    @Column
+    private Double price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "building")

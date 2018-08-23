@@ -21,6 +21,7 @@ public class ApartmentMapper {
                 .withAddress(apartmentEntity.getAddress())
                 .withStatus(apartmentEntity.getStatus())
                 .withBuildingId(apartmentEntity.getBuilding().getId())
+                .withPrice(apartmentEntity.getPrice())
                 .build();
     }
 
@@ -37,6 +38,7 @@ public class ApartmentMapper {
         apartmentEntity.setFloor(apartmentTo.getFloor());
         apartmentEntity.setAddress(apartmentTo.getAddress());
         apartmentEntity.setStatus(apartmentTo.getStatus());
+        apartmentEntity.setPrice(apartmentTo.getPrice());
 
         return apartmentEntity;
     }

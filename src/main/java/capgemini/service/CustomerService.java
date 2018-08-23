@@ -2,6 +2,7 @@ package capgemini.service;
 
 import capgemini.dto.ApartmentTo;
 import capgemini.dto.CustomerTo;
+import capgemini.entities.CustomerEntity;
 
 import java.util.List;
 
@@ -18,5 +19,7 @@ public interface CustomerService {
     CustomerTo buyApartment(ApartmentTo apartmentTo, CustomerTo customerTo);
 
     CustomerTo bookApartment(ApartmentTo apartmentTo, CustomerTo customerTo);
+
+    List<CustomerTo> findCustomersWhoBoughtMoreThanOneApartment();
 
 }

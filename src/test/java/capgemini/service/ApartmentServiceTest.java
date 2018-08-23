@@ -3,6 +3,7 @@ package capgemini.service;
 import capgemini.dto.ApartmentTo;
 import capgemini.dto.BuildingTo;
 import capgemini.dto.CriteriaApartmentTo;
+import capgemini.dto.CustomerTo;
 import capgemini.exception.ApartmentNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,13 +28,18 @@ public class ApartmentServiceTest {
     private ApartmentService apartmentService;
 
     @Autowired
+    private CustomerService customerService;
+
+    @Autowired
     private BuildingService buildingService;
 
     private ApartmentTo apartment;
     private ApartmentTo criteriaTestApartment1;
     private ApartmentTo criteriaTestApartment2;
     private ApartmentTo criteriaTestApartment3;
+    private ApartmentTo criteriaTestApartment4;
     private BuildingTo building;
+    private CustomerTo customer;
 
     @Before
     public void init() {
@@ -55,6 +61,7 @@ public class ApartmentServiceTest {
                 .withAddress("Test address")
                 .withStatus("Bought")
                 .withBuildingId(buildingWithoutApartment.getId())
+                .withPrice(120000D)
                 .build();
         apartment = apartmentService.addNewApartment(apartmentTo);
 
@@ -66,6 +73,7 @@ public class ApartmentServiceTest {
                 .withAddress("Test address")
                 .withStatus("Bought")
                 .withBuildingId(buildingWithoutApartment.getId())
+                .withPrice(100000D)
                 .build();
         criteriaTestApartment1 = apartmentService.addNewApartment(apartmentTo1);
 
@@ -77,6 +85,7 @@ public class ApartmentServiceTest {
                 .withAddress("Test address")
                 .withStatus("Bought")
                 .withBuildingId(buildingWithoutApartment.getId())
+                .withPrice(320000D)
                 .build();
         criteriaTestApartment2 = apartmentService.addNewApartment(apartmentTo2);
 
@@ -88,10 +97,38 @@ public class ApartmentServiceTest {
                 .withAddress("Test address")
                 .withStatus("Bought")
                 .withBuildingId(buildingWithoutApartment.getId())
+                .withPrice(320000D)
                 .build();
         criteriaTestApartment3 = apartmentService.addNewApartment(apartmentTo3);
 
+        ApartmentTo apartmentTo4 = new ApartmentTo.ApartmentToBuilder()
+                .withArea(10.0)
+                .withRoomsNumber(1)
+                .withBalconiesNumber(0)
+                .withfloor(0)
+                .withAddress("Test address")
+                .withStatus("Booked")
+                .withBuildingId(buildingWithoutApartment.getId())
+                .withPrice(320000D)
+                .build();
+        criteriaTestApartment4 = apartmentService.addNewApartment(apartmentTo4);
+
         building = buildingService.updateBuilding(buildingService.findBuildingById(buildingWithoutApartment.getId()));
+
+        ArrayList<Long> apartmentIds = new ArrayList<>();
+        apartmentIds.add(apartment.getId());
+        apartmentIds.add(criteriaTestApartment1.getId());
+        apartmentIds.add(criteriaTestApartment2.getId());
+        apartmentIds.add(criteriaTestApartment3.getId());
+        apartmentIds.add(criteriaTestApartment4.getId());
+
+        CustomerTo customerTo1 = new CustomerTo.CustomerToBuilder()
+                .withFirstName("jan")
+                .withLastName("kowalski")
+                .withPhone(77777777L)
+                .withApartmentIds(apartmentIds)
+                .build();
+        customer = customerService.addNewCustomer(customerTo1);
     }
 
     @Test
@@ -162,6 +199,18 @@ public class ApartmentServiceTest {
         apartmentService.updateApartment(apartment);
     }
 
+    @Test(expected = OptimisticLockingFailureException.class)
+    @Transactional
+    public void shouldTestOptimisticLookingException2() {
+        //When
+        ApartmentTo apartmentTo1 = apartmentService.findApartmentById(apartment.getId());
+        ApartmentTo apartmentTo2 = apartmentService.findApartmentById(apartment.getId());
+        apartmentTo1.setStatus("Successful update");
+        apartmentService.updateApartment(apartmentTo1);
+        apartmentTo2.setStatus("Optimistic failure exception");
+        apartmentService.updateApartment(apartmentTo2);
+    }
+
     @Test
     @Transactional
     public void shouldFindApartmentsByAllParams() {
@@ -211,7 +260,37 @@ public class ApartmentServiceTest {
         List<ApartmentTo> apartmentsByCriteria = apartmentService.findApartmentsByCriteria(criteriaApartmentTo);
 
         //Then
-        assertEquals(apartmentsByCriteria.size(), 2);
+        assertEquals(3, apartmentsByCriteria.size());
     }
 
+    @Test
+    @Transactional
+    public void shouldCalculateApartmentsTotalPriceBoughtBySpecifiedCustomer() {
+        //When
+        Double price = apartmentService.calculateApartmentsTotalPriceBoughtBySpecifiedCustomer(customer);
+
+        //Then
+        assertEquals(Double.valueOf(860000.0D), price);
+    }
+
+    @Test
+    @Transactional
+    public void shouldCalculateAvgApartmentPriceOfBuilding() {
+        //When
+        Double price = apartmentService.calculateAvgApartmentPriceOfBuilding(building);
+
+        //Then
+        assertEquals(Double.valueOf(236000.0D), price);
+    }
+
+    @Test
+    @Transactional
+    public void shouldCountApartmentsWithSpecifiedStatusInSpecifiedBuilding() {
+        //When
+        Long count = apartmentService
+                .countApartmentsWithSpecifiedStatusInSpecifiedBuilding("Bought", building);
+
+        //Then
+        assertEquals(Long.valueOf(4), count);
+    }
 }

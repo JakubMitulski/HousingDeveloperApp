@@ -10,6 +10,7 @@ import capgemini.exception.ToManyBookingsException;
 import capgemini.mappers.CustomerMapper;
 import capgemini.repository.ApartmentRepository;
 import capgemini.repository.CustomerRepository;
+import capgemini.repository.CustomizedQueriesRepository;
 import capgemini.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private CustomizedQueriesRepository customizedQueriesRepository;
 
     @Autowired
     private ApartmentRepository apartmentRepository;
@@ -136,5 +140,12 @@ public class CustomerServiceImpl implements CustomerService {
         if (apartmentsBookedByOnlyOneCustomer.size() >= 3) {
             throw new ToManyBookingsException();
         }
+    }
+
+    @Override
+    public List<CustomerTo> findCustomersWhoBoughtMoreThanOneApartment() {
+        List<CustomerEntity> customerEntities = customizedQueriesRepository
+                .findCustomersWhoBoughtMoreThanOneApartment();
+        return CustomerMapper.map2Tos(customerEntities);
     }
 }

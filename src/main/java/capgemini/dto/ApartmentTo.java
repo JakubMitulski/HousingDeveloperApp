@@ -22,6 +22,7 @@ public class ApartmentTo {
     private String address;
     private String status;
     private Long buildingId;
+    private Double price;
 
     public static ApartmentToBuilder builder() {
         return new ApartmentToBuilder();
@@ -38,6 +39,7 @@ public class ApartmentTo {
         private String address;
         private String status;
         private Long buildingId;
+        private Double price;
 
         public ApartmentToBuilder withVersion(int version) {
             this.version = version;
@@ -84,9 +86,14 @@ public class ApartmentTo {
             return this;
         }
 
+        public ApartmentToBuilder withPrice(Double price) {
+            this.price = price;
+            return this;
+        }
+
         public ApartmentTo build() {
             checkBeforeBuild(area, roomsNumber, balconiesNumber, floor, address, status, buildingId);
-            return new ApartmentTo(version, id, area, roomsNumber, balconiesNumber, floor, address, status, buildingId);
+            return new ApartmentTo(version, id, area, roomsNumber, balconiesNumber, floor, address, status, buildingId, price);
         }
 
         private void checkBeforeBuild(Double area, Integer roomsNumber,
