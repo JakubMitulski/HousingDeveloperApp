@@ -1,9 +1,7 @@
 package capgemini.service.impl;
 
 import capgemini.dto.ApartmentTo;
-import capgemini.dto.BuildingTo;
 import capgemini.dto.CriteriaApartmentTo;
-import capgemini.dto.CustomerTo;
 import capgemini.entities.ApartmentEntity;
 import capgemini.entities.BuildingEntity;
 import capgemini.exception.ApartmentNotFoundException;
@@ -11,22 +9,19 @@ import capgemini.mappers.ApartmentMapper;
 import capgemini.repository.ApartmentRepository;
 import capgemini.repository.BuildingRepository;
 import capgemini.repository.CustomerRepository;
-import capgemini.repository.CustomizedQueriesRepository;
 import capgemini.service.ApartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class ApartamentServiceImpl implements ApartmentService {
 
     @Autowired
     private ApartmentRepository apartmentRepository;
-
-    @Autowired
-    private CustomizedQueriesRepository customizedQueriesRepository;
 
     @Autowired
     private BuildingRepository buildingRepository;
@@ -96,25 +91,8 @@ public class ApartamentServiceImpl implements ApartmentService {
 
     @Override
     public List<ApartmentTo> findApartmentsByCriteria(CriteriaApartmentTo criteriaApartmentTo) {
-        List<ApartmentEntity> apartmentEntities = customizedQueriesRepository
+        List<ApartmentEntity> apartmentEntities = apartmentRepository
                 .findApartmentsByCriteria(criteriaApartmentTo);
         return ApartmentMapper.map2Tos(apartmentEntities);
-    }
-
-    @Override
-    public Double calculateApartmentsTotalPriceBoughtBySpecifiedCustomer(CustomerTo customerTo) {
-        return customizedQueriesRepository
-                .calculateApartmentsTotalPriceBoughtBySpecifiedCustomer(customerTo.getId());
-    }
-
-    @Override
-    public Double calculateAvgApartmentPriceOfBuilding(BuildingTo buildingTo) {
-        return customizedQueriesRepository.calculateAvgApartmentPriceOfBuilding(buildingTo.getId());
-    }
-
-    @Override
-    public Long countApartmentsWithSpecifiedStatusInSpecifiedBuilding(String status, BuildingTo buildingTo) {
-        return customizedQueriesRepository
-                .countApartmentsWithSpecifiedStatusInSpecifiedBuilding(status, buildingTo.getId());
     }
 }

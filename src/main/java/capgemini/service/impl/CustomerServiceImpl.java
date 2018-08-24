@@ -10,24 +10,22 @@ import capgemini.exception.ToManyBookingsException;
 import capgemini.mappers.CustomerMapper;
 import capgemini.repository.ApartmentRepository;
 import capgemini.repository.CustomerRepository;
-import capgemini.repository.CustomizedQueriesRepository;
 import capgemini.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private CustomerRepository customerRepository;
-
-    @Autowired
-    private CustomizedQueriesRepository customizedQueriesRepository;
 
     @Autowired
     private ApartmentRepository apartmentRepository;
@@ -144,8 +142,15 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<CustomerTo> findCustomersWhoBoughtMoreThanOneApartment() {
-        List<CustomerEntity> customerEntities = customizedQueriesRepository
+        List<CustomerEntity> customerEntities = customerRepository
                 .findCustomersWhoBoughtMoreThanOneApartment();
         return CustomerMapper.map2Tos(customerEntities);
+    }
+
+
+    @Override
+    public Double calculateApartmentsTotalPriceBoughtBySpecifiedCustomer(CustomerTo customerTo) {
+        return customerRepository
+                .calculateApartmentsTotalPriceBoughtBySpecifiedCustomer(customerTo.getId());
     }
 }

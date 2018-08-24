@@ -37,6 +37,7 @@ public class CustomerServiceTest {
     private ApartmentTo testApartment3;
     private ApartmentTo testApartment4;
     private ApartmentTo testApartment5;
+    private ApartmentTo testApartment6;
     private BuildingTo building;
     private CustomerTo customer;
     private CustomerTo testCustomer1;
@@ -62,6 +63,7 @@ public class CustomerServiceTest {
                 .withAddress("Test address")
                 .withStatus("Bought")
                 .withBuildingId(buildingWithoutApartment.getId())
+                .withPrice(100000.0D)
                 .build();
         apartment = apartmentService.addNewApartment(apartmentTo);
 
@@ -73,6 +75,7 @@ public class CustomerServiceTest {
                 .withAddress("Some address")
                 .withStatus("Bought")
                 .withBuildingId(buildingWithoutApartment.getId())
+                .withPrice(200000.0D)
                 .build();
         testApartment1 = apartmentService.addNewApartment(apartmentToTest1);
 
@@ -84,6 +87,7 @@ public class CustomerServiceTest {
                 .withAddress("Some address")
                 .withStatus("Some status")
                 .withBuildingId(buildingWithoutApartment.getId())
+                .withPrice(390000.0D)
                 .build();
         testApartment2 = apartmentService.addNewApartment(apartmentToTest2);
 
@@ -95,6 +99,7 @@ public class CustomerServiceTest {
                 .withAddress("Some address")
                 .withStatus("Some status")
                 .withBuildingId(buildingWithoutApartment.getId())
+                .withPrice(205000.0D)
                 .build();
         testApartment3 = apartmentService.addNewApartment(apartmentToTest3);
 
@@ -106,6 +111,7 @@ public class CustomerServiceTest {
                 .withAddress("Some address")
                 .withStatus("Some status")
                 .withBuildingId(buildingWithoutApartment.getId())
+                .withPrice(550000.0D)
                 .build();
         testApartment4 = apartmentService.addNewApartment(apartmentToTest4);
 
@@ -117,13 +123,27 @@ public class CustomerServiceTest {
                 .withAddress("Some address")
                 .withStatus("Some status")
                 .withBuildingId(buildingWithoutApartment.getId())
+                .withPrice(170000.0D)
                 .build();
         testApartment5 = apartmentService.addNewApartment(apartmentToTest5);
+
+        ApartmentTo apartmentToTest6 = new ApartmentTo.ApartmentToBuilder()
+                .withArea(92.0)
+                .withRoomsNumber(4)
+                .withBalconiesNumber(3)
+                .withfloor(7)
+                .withAddress("Some address")
+                .withStatus("Bought")
+                .withBuildingId(buildingWithoutApartment.getId())
+                .withPrice(170000.0D)
+                .build();
+        testApartment6 = apartmentService.addNewApartment(apartmentToTest6);
 
         building = buildingService.updateBuilding(buildingService.findBuildingById(buildingWithoutApartment.getId()));
 
         ArrayList<Long> apartmentIds = new ArrayList<>();
         apartmentIds.add(apartment.getId());
+        apartmentIds.add(testApartment6.getId());
 
         CustomerTo customerTo1 = new CustomerTo.CustomerToBuilder()
                 .withFirstName("jan")
@@ -134,7 +154,7 @@ public class CustomerServiceTest {
         customer = customerService.addNewCustomer(customerTo1);
 
         CustomerTo customerTo2 = new CustomerTo.CustomerToBuilder()
-                .withFirstName("jan")
+                .withFirstName("tomasz")
                 .withLastName("kowalski")
                 .withPhone(77777777L)
                 .withApartmentIds(new ArrayList<>())
@@ -142,7 +162,7 @@ public class CustomerServiceTest {
         testCustomer1 = customerService.addNewCustomer(customerTo2);
 
         CustomerTo customerTo3 = new CustomerTo.CustomerToBuilder()
-                .withFirstName("jan")
+                .withFirstName("adam")
                 .withLastName("kowalski")
                 .withPhone(77777777L)
                 .withApartmentIds(new ArrayList<>())
@@ -198,6 +218,8 @@ public class CustomerServiceTest {
         customer.setLastName("Successful update");
         customerService.updateCustomer(customer);
         customer.setLastName("Optimistic failure exception");
+
+        //Then
         customerService.updateCustomer(customer);
     }
 
@@ -220,25 +242,26 @@ public class CustomerServiceTest {
 
         //Then
         assertEquals(apartmentById.getStatus(), "BOUGHT");
-        assertEquals(customerWhoBought.getApartmentIds().get(1), testApartment1.getId());
+        assertEquals(3, customerWhoBought.getApartmentIds().size());
     }
 
     @Test(expected = ToManyBookingsException.class)
     @Transactional
     public void shouldCustomerBookApartment() {
         //When
-        CustomerTo customerAfterFirstSingleBooking = customerService.bookApartment(testApartment1, testCustomer1);
-        CustomerTo customerAfterSecondSingleBooking = customerService.bookApartment(testApartment2, customerAfterFirstSingleBooking);
-        CustomerTo customerAfterThirdSingleBooking = customerService.bookApartment(testApartment3, customerAfterSecondSingleBooking);
-        CustomerTo anotherCustomer = customerService.bookApartment(testApartment3, testCustomer2);
-        CustomerTo customerAfterFirstDoubleBooking = customerService.bookApartment(testApartment4, customerAfterThirdSingleBooking);
+        customerService.bookApartment(testApartment1, testCustomer1);
+        customerService.bookApartment(testApartment2, customerService.findCustomerById(testCustomer1.getId()));
+        CustomerTo testujemy = customerService.bookApartment(testApartment3, customerService.findCustomerById(testCustomer1.getId()));
+        customerService.bookApartment(testApartment3, testCustomer2);
+        customerService.bookApartment(testApartment4, customerService.findCustomerById(testCustomer1.getId()));
 
         ApartmentTo apartmentById = apartmentService.findApartmentById(testApartment1.getId());
+        CustomerTo customerById = customerService.findCustomerById(testCustomer1.getId());
 
         //Then
         assertEquals(apartmentById.getStatus(), "BOOKED");
-        assertEquals(customerAfterFirstSingleBooking.getApartmentIds().get(0), testApartment1.getId());
-        customerService.bookApartment(testApartment5, customerAfterFirstDoubleBooking);
+        assertEquals(customerById.getApartmentIds().get(0), testApartment1.getId());
+        customerService.bookApartment(testApartment5, customerService.findCustomerById(testCustomer1.getId()));
     }
 
     @Test
@@ -249,5 +272,15 @@ public class CustomerServiceTest {
 
         //Then
         assertEquals(1, customers.size());
+    }
+
+    @Test
+    @Transactional
+    public void shouldCalculateApartmentsTotalPriceBoughtBySpecifiedCustomer() {
+        //When
+        Double price = customerService.calculateApartmentsTotalPriceBoughtBySpecifiedCustomer(customer);
+
+        //Then
+        assertEquals(Double.valueOf(270000.0D), price);
     }
 }

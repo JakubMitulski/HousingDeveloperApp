@@ -14,4 +14,8 @@ public interface BuildingService {
 
     void deleteBuilding(BuildingTo buildingTo);
 
+    Double calculateAvgApartmentPriceOfBuilding(BuildingTo buildingTo);
+
+    Long countApartmentsWithSpecifiedStatusInSpecifiedBuilding(String status, BuildingTo buildingTo);
+
 }

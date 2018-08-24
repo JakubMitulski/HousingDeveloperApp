@@ -11,11 +11,13 @@ import capgemini.service.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Service
+@Transactional
 public class BuildingServiceImpl implements BuildingService {
 
     @Autowired
@@ -72,5 +74,16 @@ public class BuildingServiceImpl implements BuildingService {
             throw new BuildingNotFoundException();
         }
         buildingRepository.deleteById(buildingTo.getId());
+    }
+
+    @Override
+    public Double calculateAvgApartmentPriceOfBuilding(BuildingTo buildingTo) {
+        return buildingRepository.calculateAvgApartmentPriceOfBuilding(buildingTo.getId());
+    }
+
+    @Override
+    public Long countApartmentsWithSpecifiedStatusInSpecifiedBuilding(String status, BuildingTo buildingTo) {
+        return buildingRepository
+                .countApartmentsWithSpecifiedStatusInSpecifiedBuilding(status, buildingTo.getId());
     }
 }

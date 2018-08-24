@@ -2,15 +2,14 @@ package capgemini.repository.impl;
 
 import capgemini.dto.CriteriaApartmentTo;
 import capgemini.entities.ApartmentEntity;
-import capgemini.entities.CustomerEntity;
-import capgemini.repository.CustomizedQueriesRepository;
+import capgemini.repository.CustomizedApartmentRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
-public class CustomizedQueriesRepositoryImpl extends AbstractRepository<ApartmentEntity, Long> implements CustomizedQueriesRepository {
+public class CustomizedApartmentRepositoryImpl extends AbstractRepository<ApartmentEntity, Long> implements CustomizedApartmentRepository {
 
     @Override
     public List<ApartmentEntity> findApartmentsByCriteria(CriteriaApartmentTo criteriaApartmentTo) {
@@ -78,47 +77,6 @@ public class CustomizedQueriesRepositoryImpl extends AbstractRepository<Apartmen
             query.setParameter("maxBalconiesNumber", criteriaApartmentTo.getMaxBalconiesNumber());
         }
 
-        return query.getResultList();
-    }
-
-    @Override
-    public Double calculateApartmentsTotalPriceBoughtBySpecifiedCustomer(Long customerId) {
-        TypedQuery<Double> query = entityManager.createQuery(
-                "select sum(apar.price) from CustomerEntity c " +
-                        "join c.apartments apar on c.id = :customerId " +
-                        "where apar.status = :status", Double.class);
-        query.setParameter("customerId", customerId);
-        query.setParameter("status", "Bought");
-        return query.getSingleResult();
-    }
-
-    @Override
-    public Double calculateAvgApartmentPriceOfBuilding(Long buildingId) {
-        TypedQuery<Double> query = entityManager.createQuery(
-                "select avg(apar.price) from BuildingEntity b " +
-                        "join b.apartments apar on b.id = :buildingId", Double.class);
-        query.setParameter("buildingId", buildingId);
-        return query.getSingleResult();
-    }
-
-    @Override
-    public Long countApartmentsWithSpecifiedStatusInSpecifiedBuilding(String status, Long buildingId) {
-        TypedQuery<Long> query = entityManager.createQuery(
-                "select count(*) from ApartmentEntity a " +
-                        "where a.building.id = :buildingId " +
-                        "and a.status = :status", Long.class);
-        query.setParameter("buildingId", buildingId);
-        query.setParameter("status", status);
-        return query.getSingleResult();
-    }
-
-    @Override
-    public List<CustomerEntity> findCustomersWhoBoughtMoreThanOneApartment() {
-        TypedQuery<CustomerEntity> query = entityManager.createQuery(
-                "select c from CustomerEntity c " +
-                        "join c.apartments apar " +
-                        "where (select count(*) from apar where upper(apar.status) like 'BOUGHT') > 1 ",
-                CustomerEntity.class);
         return query.getResultList();
     }
 }

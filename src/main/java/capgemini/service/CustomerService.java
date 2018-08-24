@@ -22,4 +22,6 @@ public interface CustomerService {
 
     List<CustomerTo> findCustomersWhoBoughtMoreThanOneApartment();
 
+    Double calculateApartmentsTotalPriceBoughtBySpecifiedCustomer(CustomerTo customerTo);
+
 }

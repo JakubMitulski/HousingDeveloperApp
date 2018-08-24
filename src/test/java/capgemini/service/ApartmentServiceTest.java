@@ -19,6 +19,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = "spring.profiles.active=hsql")
@@ -199,6 +200,7 @@ public class ApartmentServiceTest {
         apartmentService.updateApartment(apartment);
     }
 
+
     @Test(expected = OptimisticLockingFailureException.class)
     @Transactional
     public void shouldTestOptimisticLookingException2() {
@@ -261,36 +263,5 @@ public class ApartmentServiceTest {
 
         //Then
         assertEquals(3, apartmentsByCriteria.size());
-    }
-
-    @Test
-    @Transactional
-    public void shouldCalculateApartmentsTotalPriceBoughtBySpecifiedCustomer() {
-        //When
-        Double price = apartmentService.calculateApartmentsTotalPriceBoughtBySpecifiedCustomer(customer);
-
-        //Then
-        assertEquals(Double.valueOf(860000.0D), price);
-    }
-
-    @Test
-    @Transactional
-    public void shouldCalculateAvgApartmentPriceOfBuilding() {
-        //When
-        Double price = apartmentService.calculateAvgApartmentPriceOfBuilding(building);
-
-        //Then
-        assertEquals(Double.valueOf(236000.0D), price);
-    }
-
-    @Test
-    @Transactional
-    public void shouldCountApartmentsWithSpecifiedStatusInSpecifiedBuilding() {
-        //When
-        Long count = apartmentService
-                .countApartmentsWithSpecifiedStatusInSpecifiedBuilding("Bought", building);
-
-        //Then
-        assertEquals(Long.valueOf(4), count);
     }
 }

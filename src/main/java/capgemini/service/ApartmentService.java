@@ -21,10 +21,4 @@ public interface ApartmentService {
 
     List<ApartmentTo> findApartmentsByCriteria(CriteriaApartmentTo criteriaApartmentTo);
 
-    Double calculateApartmentsTotalPriceBoughtBySpecifiedCustomer(CustomerTo customerTo);
-
-    Double calculateAvgApartmentPriceOfBuilding(BuildingTo buildingTo);
-
-    Long countApartmentsWithSpecifiedStatusInSpecifiedBuilding(String status, BuildingTo buildingTo);
-
 }

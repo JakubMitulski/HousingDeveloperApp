@@ -48,8 +48,22 @@ public class BuildingServiceTest {
                 .withAddress("Test address")
                 .withStatus("Bought")
                 .withBuildingId(buildingWithoutApartment.getId())
+                .withPrice(100000.0D)
                 .build();
         apartment = apartmentService.addNewApartment(apartmentTo);
+
+        ApartmentTo apartmentTo2 = new ApartmentTo.ApartmentToBuilder()
+                .withArea(42.0)
+                .withRoomsNumber(2)
+                .withBalconiesNumber(1)
+                .withfloor(2)
+                .withAddress("Test address")
+                .withStatus("Bought")
+                .withBuildingId(buildingWithoutApartment.getId())
+                .withPrice(200000.0D)
+                .build();
+        apartmentService.addNewApartment(apartmentTo2);
+
         building = buildingService.updateBuilding(buildingService.findBuildingById(buildingWithoutApartment.getId()));
     }
 
@@ -73,7 +87,7 @@ public class BuildingServiceTest {
         BuildingTo updatedBuilding = buildingService.updateBuilding(buildingById);
 
         //Then
-        assertEquals(apartment.getId(), updatedBuilding.getApartmentIds().get(1));
+        assertEquals(apartment.getId(), updatedBuilding.getApartmentIds().get(2));
         assertEquals("Updated description", updatedBuilding.getDescription());
     }
 
@@ -129,5 +143,26 @@ public class BuildingServiceTest {
         buildingService.updateBuilding(building);
         building.setDescription("Optimistic failure exception");
         buildingService.updateBuilding(building);
+    }
+
+    @Test
+    @Transactional
+    public void shouldCalculateAvgApartmentPriceOfBuilding() {
+        //When
+        Double price = buildingService.calculateAvgApartmentPriceOfBuilding(building);
+
+        //Then
+        assertEquals(Double.valueOf(150000.0D), price);
+    }
+
+    @Test
+    @Transactional
+    public void shouldCountApartmentsWithSpecifiedStatusInSpecifiedBuilding() {
+        //When
+        Long count = buildingService
+                .countApartmentsWithSpecifiedStatusInSpecifiedBuilding("Bought", building);
+
+        //Then
+        assertEquals(Long.valueOf(2), count);
     }
 }
