@@ -6,6 +6,7 @@ import capgemini.repository.CustomizedBuildingRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
+import java.util.List;
 
 @Repository
 public class CustomizedBuildingRepositoryImpl extends AbstractRepository<ApartmentEntity, Long> implements CustomizedBuildingRepository {
@@ -31,7 +32,7 @@ public class CustomizedBuildingRepositoryImpl extends AbstractRepository<Apartme
     }
 
     @Override
-    public BuildingEntity findBuildingWithLargestAmountOfAvailableApartments() {
+    public List<BuildingEntity> findBuildingWithLargestAmountOfAvailableApartments() {
         return null;
     }
 }

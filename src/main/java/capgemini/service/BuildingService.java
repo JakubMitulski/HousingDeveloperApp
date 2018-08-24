@@ -1,6 +1,9 @@
 package capgemini.service;
 
 import capgemini.dto.BuildingTo;
+import capgemini.entities.BuildingEntity;
+
+import java.util.List;
 
 public interface BuildingService {
 
@@ -17,5 +20,7 @@ public interface BuildingService {
     Double calculateAvgApartmentPriceOfBuilding(BuildingTo buildingTo);
 
     Long countApartmentsWithSpecifiedStatusInSpecifiedBuilding(String status, BuildingTo buildingTo);
+
+    List<BuildingTo> findBuildingWithLargestAmountOfAvailableApartments();
 
 }

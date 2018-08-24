@@ -10,4 +10,6 @@ public interface CustomizedApartmentRepository {
 
     List<ApartmentEntity> findApartmentsByCriteria(CriteriaApartmentTo criteriaApartmentTo);
 
+    List<ApartmentEntity> findAllApartmentsInBuildingWithElevatorOrOnGroundFloor();
+
 }

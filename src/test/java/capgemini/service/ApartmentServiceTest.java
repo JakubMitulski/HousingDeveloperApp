@@ -60,7 +60,7 @@ public class ApartmentServiceTest {
                 .withBalconiesAmount(1)
                 .withFloorNumber(2)
                 .withAddress("Test address")
-                .withStatus("Bought")
+                .withStatus("Booked")
                 .withBuildingId(buildingWithoutApartment.getId())
                 .withPrice(120000D)
                 .build();
@@ -72,7 +72,7 @@ public class ApartmentServiceTest {
                 .withBalconiesAmount(0)
                 .withFloorNumber(2)
                 .withAddress("Test address")
-                .withStatus("Bought")
+                .withStatus("Booked")
                 .withBuildingId(buildingWithoutApartment.getId())
                 .withPrice(100000D)
                 .build();
@@ -84,7 +84,7 @@ public class ApartmentServiceTest {
                 .withBalconiesAmount(4)
                 .withFloorNumber(2)
                 .withAddress("Test address")
-                .withStatus("Bought")
+                .withStatus("Booked")
                 .withBuildingId(buildingWithoutApartment.getId())
                 .withPrice(320000D)
                 .build();
@@ -96,7 +96,7 @@ public class ApartmentServiceTest {
                 .withBalconiesAmount(2)
                 .withFloorNumber(2)
                 .withAddress("Test address")
-                .withStatus("Bought")
+                .withStatus("Booked")
                 .withBuildingId(buildingWithoutApartment.getId())
                 .withPrice(320000D)
                 .build();
@@ -130,6 +130,28 @@ public class ApartmentServiceTest {
                 .withApartmentIds(apartmentIds)
                 .build();
         customer = customerService.addNewCustomer(customerTo1);
+
+        BuildingTo buildingTo2 = new BuildingTo.BuildingToBuilder()
+                .withDescription("Test description")
+                .withLocation("Test location")
+                .withFloorsAmount(2)
+                .withElevator(true)
+                .withApartmentsAmount(12)
+                .withApartmentIds(new ArrayList<>())
+                .build();
+        BuildingTo buildingWithoutApartment2 = buildingService.addNewBuilding(buildingTo2);
+
+        ApartmentTo apartmentTo5 = new ApartmentTo.ApartmentToBuilder()
+                .withArea(42.0)
+                .withRoomsAmount(2)
+                .withBalconiesAmount(1)
+                .withFloorNumber(2)
+                .withAddress("Test address")
+                .withStatus("Bought")
+                .withBuildingId(buildingWithoutApartment2.getId())
+                .withPrice(120000D)
+                .build();
+        apartmentService.addNewApartment(apartmentTo5);
     }
 
     @Test
@@ -247,7 +269,7 @@ public class ApartmentServiceTest {
         List<ApartmentTo> apartmentsByCriteria = apartmentService.findApartmentsByCriteria(criteriaApartmentTo);
 
         //Then
-        assertEquals(apartmentsByCriteria.size(), 3);
+        assertEquals(3, apartmentsByCriteria.size());
     }
 
     @Test
@@ -263,5 +285,15 @@ public class ApartmentServiceTest {
 
         //Then
         assertEquals(3, apartmentsByCriteria.size());
+    }
+
+    @Test
+    @Transactional
+    public void shouldFindAllApartmentsInBuildingWithElevatorOrOnGroundFloor() {
+        //When
+        List<ApartmentTo> apartments = apartmentService.findAllApartmentsInBuildingWithElevatorOrOnGroundFloor();
+
+        //Then
+        assertEquals(2, apartments.size());
     }
 }

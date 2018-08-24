@@ -2,6 +2,7 @@ package capgemini.service;
 
 import capgemini.dto.ApartmentTo;
 import capgemini.dto.CustomerTo;
+import capgemini.entities.BuildingEntity;
 import capgemini.entities.CustomerEntity;
 
 import java.util.List;

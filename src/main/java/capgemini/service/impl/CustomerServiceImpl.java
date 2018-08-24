@@ -3,6 +3,7 @@ package capgemini.service.impl;
 import capgemini.dto.ApartmentTo;
 import capgemini.dto.CustomerTo;
 import capgemini.entities.ApartmentEntity;
+import capgemini.entities.BuildingEntity;
 import capgemini.entities.CustomerEntity;
 import capgemini.exception.ApartmentNotFoundException;
 import capgemini.exception.CustomerNotFoundException;
@@ -146,7 +147,6 @@ public class CustomerServiceImpl implements CustomerService {
                 .findCustomersWhoBoughtMoreThanOneApartment();
         return CustomerMapper.map2Tos(customerEntities);
     }
-
 
     @Override
     public Double calculateApartmentsTotalPriceBoughtBySpecifiedCustomer(CustomerTo customerTo) {

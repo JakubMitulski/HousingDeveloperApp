@@ -14,7 +14,7 @@ public class CustomizedApartmentRepositoryImpl extends AbstractRepository<Apartm
     @Override
     public List<ApartmentEntity> findApartmentsByCriteria(CriteriaApartmentTo criteriaApartmentTo) {
         StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append("select a from ApartmentEntity a where ");
+        queryBuilder.append("select a from ApartmentEntity a where a.status not like 'Bought' and ");
         boolean canAppendQueryByAnd = false;
 
         if (criteriaApartmentTo.getMinArea() != null) {
@@ -77,6 +77,16 @@ public class CustomizedApartmentRepositoryImpl extends AbstractRepository<Apartm
             query.setParameter("maxBalconiesAmount", criteriaApartmentTo.getMaxBalconiesAmount());
         }
 
+        return query.getResultList();
+    }
+
+    @Override
+    public List<ApartmentEntity> findAllApartmentsInBuildingWithElevatorOrOnGroundFloor() {
+        TypedQuery<ApartmentEntity> query = entityManager.createQuery(
+                "select a from ApartmentEntity a " +
+                        "join a.building " +
+                        "where a.building.hasElevator = 'true' " +
+                        "or a.floorNumber = 0", ApartmentEntity.class);
         return query.getResultList();
     }
 }

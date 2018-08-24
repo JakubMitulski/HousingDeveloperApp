@@ -86,4 +86,11 @@ public class BuildingServiceImpl implements BuildingService {
         return buildingRepository
                 .countApartmentsWithSpecifiedStatusInSpecifiedBuilding(status, buildingTo.getId());
     }
+
+    @Override
+    public List<BuildingTo> findBuildingWithLargestAmountOfAvailableApartments() {
+        List<BuildingEntity> buildingEntities = buildingRepository
+                .findBuildingWithLargestAmountOfAvailableApartments();
+        return BuildingMapper.map2Tos(buildingEntities);
+    }
 }

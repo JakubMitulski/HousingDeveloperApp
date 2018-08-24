@@ -95,4 +95,11 @@ public class ApartamentServiceImpl implements ApartmentService {
                 .findApartmentsByCriteria(criteriaApartmentTo);
         return ApartmentMapper.map2Tos(apartmentEntities);
     }
+
+    @Override
+    public List<ApartmentTo> findAllApartmentsInBuildingWithElevatorOrOnGroundFloor(){
+        List<ApartmentEntity> apartmentEntities = apartmentRepository
+                .findAllApartmentsInBuildingWithElevatorOrOnGroundFloor();
+        return ApartmentMapper.map2Tos(apartmentEntities);
+    }
 }
