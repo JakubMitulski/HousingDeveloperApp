@@ -15,10 +15,10 @@ public class CriteriaApartmentTo {
 
     private Double minArea;
     private Double maxArea;
-    private Integer minRoomsNumber;
-    private Integer maxRoomsNumber;
-    private Integer minBalconiesNumber;
-    private Integer maxBalconiesNumber;
+    private Integer minRoomsAmount;
+    private Integer maxRoomsAmount;
+    private Integer minBalconiesAmount;
+    private Integer maxBalconiesAmount;
 
     public static CriteriaApartmentTo builder() {
         return new CriteriaApartmentTo();
@@ -28,10 +28,10 @@ public class CriteriaApartmentTo {
 
         private Double minArea;
         private Double maxArea;
-        private Integer minRoomsNumber;
-        private Integer maxRoomsNumber;
-        private Integer minBalconiesNumber;
-        private Integer maxBalconiesNumber;
+        private Integer minRoomsAmount;
+        private Integer maxRoomsAmount;
+        private Integer minBalconiesAmount;
+        private Integer maxBalconiesAmount;
 
         public CriteriaApartmentToBuilder withMinArea(Double minArea) {
             this.minArea = minArea;
@@ -43,28 +43,28 @@ public class CriteriaApartmentTo {
             return this;
         }
 
-        public CriteriaApartmentToBuilder withMinRoomsNumber(Integer minRoomsNumber) {
-            this.minRoomsNumber = minRoomsNumber;
+        public CriteriaApartmentToBuilder withMinRoomsAmount(Integer minRoomsAmount) {
+            this.minRoomsAmount = minRoomsAmount;
             return this;
         }
 
-        public CriteriaApartmentToBuilder withMaxRoomsNumber(Integer maxRoomsNumber) {
-            this.maxRoomsNumber = maxRoomsNumber;
+        public CriteriaApartmentToBuilder withMaxRoomsAmount(Integer maxRoomsAmount) {
+            this.maxRoomsAmount = maxRoomsAmount;
             return this;
         }
 
-        public CriteriaApartmentToBuilder withMinBalconiesNumber(Integer minBalconiesNumber) {
-            this.minBalconiesNumber = minBalconiesNumber;
+        public CriteriaApartmentToBuilder withMinBalconiesAmount(Integer minBalconiesAmount) {
+            this.minBalconiesAmount = minBalconiesAmount;
             return this;
         }
 
-        public CriteriaApartmentToBuilder withMaxBalconiesNumber(Integer maxBalconiesNumber) {
-            this.maxBalconiesNumber = maxBalconiesNumber;
+        public CriteriaApartmentToBuilder withMaxBalconiesAmount(Integer maxBalconiesAmount) {
+            this.maxBalconiesAmount = maxBalconiesAmount;
             return this;
         }
 
         public CriteriaApartmentTo build() {
-            return new CriteriaApartmentTo(minArea, maxArea, minRoomsNumber, maxRoomsNumber, minBalconiesNumber, maxBalconiesNumber);
+            return new CriteriaApartmentTo(minArea, maxArea, minRoomsAmount, maxRoomsAmount, minBalconiesAmount, maxBalconiesAmount);
         }
     }
 
@@ -75,14 +75,14 @@ public class CriteriaApartmentTo {
         CriteriaApartmentTo that = (CriteriaApartmentTo) o;
         return Objects.equals(minArea, that.minArea) &&
                 Objects.equals(maxArea, that.maxArea) &&
-                Objects.equals(minRoomsNumber, that.minRoomsNumber) &&
-                Objects.equals(maxRoomsNumber, that.maxRoomsNumber) &&
-                Objects.equals(minBalconiesNumber, that.minBalconiesNumber) &&
-                Objects.equals(maxBalconiesNumber, that.maxBalconiesNumber);
+                Objects.equals(minRoomsAmount, that.minRoomsAmount) &&
+                Objects.equals(maxRoomsAmount, that.maxRoomsAmount) &&
+                Objects.equals(minBalconiesAmount, that.minBalconiesAmount) &&
+                Objects.equals(maxBalconiesAmount, that.maxBalconiesAmount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(minArea, maxArea, minRoomsNumber, maxRoomsNumber, minBalconiesNumber, maxBalconiesNumber);
+        return Objects.hash(minArea, maxArea, minRoomsAmount, maxRoomsAmount, minBalconiesAmount, maxBalconiesAmount);
     }
 }

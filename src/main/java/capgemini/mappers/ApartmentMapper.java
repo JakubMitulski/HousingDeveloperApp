@@ -15,9 +15,9 @@ public class ApartmentMapper {
                 .withVersion(apartmentEntity.getVersion())
                 .withId(apartmentEntity.getId())
                 .withArea(apartmentEntity.getArea())
-                .withRoomsNumber(apartmentEntity.getRoomsNumber())
-                .withBalconiesNumber(apartmentEntity.getBalconiesNumber())
-                .withfloor(apartmentEntity.getFloor())
+                .withRoomsAmount(apartmentEntity.getRoomsAmount())
+                .withBalconiesAmount(apartmentEntity.getBalconiesAmount())
+                .withFloorNumber(apartmentEntity.getFloorNumber())
                 .withAddress(apartmentEntity.getAddress())
                 .withStatus(apartmentEntity.getStatus())
                 .withBuildingId(apartmentEntity.getBuilding().getId())
@@ -33,9 +33,9 @@ public class ApartmentMapper {
         apartmentEntity.setVersion(apartmentTo.getVersion());
         apartmentEntity.setId(apartmentTo.getId());
         apartmentEntity.setArea(apartmentTo.getArea());
-        apartmentEntity.setRoomsNumber(apartmentTo.getRoomsNumber());
-        apartmentEntity.setBalconiesNumber(apartmentTo.getBalconiesNumber());
-        apartmentEntity.setFloor(apartmentTo.getFloor());
+        apartmentEntity.setRoomsAmount(apartmentTo.getRoomsAmount());
+        apartmentEntity.setBalconiesAmount(apartmentTo.getBalconiesAmount());
+        apartmentEntity.setFloorNumber(apartmentTo.getFloorNumber());
         apartmentEntity.setAddress(apartmentTo.getAddress());
         apartmentEntity.setStatus(apartmentTo.getStatus());
         apartmentEntity.setPrice(apartmentTo.getPrice());

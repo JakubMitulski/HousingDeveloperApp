@@ -20,9 +20,9 @@ public class BuildingTo {
     private Long id;
     private String description;
     private String location;
-    private Integer floorsNumber;
+    private Integer floorsAmount;
     private Boolean hasElevator;
-    private Integer apartmentsNumber;
+    private Integer apartmentsAmount;
     private List<Long> apartmentIds = new ArrayList<>();
 
     public static BuildingToBuilder builder() {
@@ -35,9 +35,9 @@ public class BuildingTo {
         private Long id;
         private String description;
         private String location;
-        private Integer floorsNumber;
+        private Integer floorsAmount;
         private Boolean hasElevator;
-        private Integer apartmentsNumber;
+        private Integer apartmentsAmount;
         private List<Long> apartmentIds;
 
         public BuildingToBuilder withVersion(int version) {
@@ -60,8 +60,8 @@ public class BuildingTo {
             return this;
         }
 
-        public BuildingToBuilder withFloorsNumber(Integer floorsNumber) {
-            this.floorsNumber = floorsNumber;
+        public BuildingToBuilder withFloorsAmount(Integer floorsAmount) {
+            this.floorsAmount = floorsAmount;
             return this;
         }
 
@@ -70,8 +70,8 @@ public class BuildingTo {
             return this;
         }
 
-        public BuildingToBuilder withApartmentsNumber(Integer apartmentsNumber) {
-            this.apartmentsNumber = apartmentsNumber;
+        public BuildingToBuilder withApartmentsAmount(Integer apartmentsAmount) {
+            this.apartmentsAmount = apartmentsAmount;
             return this;
         }
 
@@ -81,20 +81,20 @@ public class BuildingTo {
         }
 
         public BuildingTo build() {
-            checkBeforeBuild(description, location, floorsNumber, hasElevator,
-                    apartmentsNumber, apartmentIds);
-            return new BuildingTo(version, id, description, location, floorsNumber,
-                    hasElevator, apartmentsNumber, apartmentIds);
+            checkBeforeBuild(description, location, floorsAmount, hasElevator,
+                    apartmentsAmount, apartmentIds);
+            return new BuildingTo(version, id, description, location, floorsAmount,
+                    hasElevator, apartmentsAmount, apartmentIds);
         }
 
-        private void checkBeforeBuild(String description, String location, Integer floorsNumber,
-                                      Boolean hasElevator, Integer apartmentsNumber,
+        private void checkBeforeBuild(String description, String location, Integer floorsAmount,
+                                      Boolean hasElevator, Integer apartmentsAmount,
                                       Collection<Long> apartmentIds) {
             if (description == null || description.isEmpty() ||
                     location == null || location.isEmpty() ||
-                    floorsNumber == null ||
+                    floorsAmount == null ||
                     hasElevator == null ||
-                    apartmentsNumber == null ||
+                    apartmentsAmount == null ||
                     apartmentIds == null) {
                 throw new RuntimeException("Incorrect building_to be created");
             }
@@ -110,14 +110,14 @@ public class BuildingTo {
                 Objects.equals(id, that.id) &&
                 Objects.equals(description, that.description) &&
                 Objects.equals(location, that.location) &&
-                Objects.equals(floorsNumber, that.floorsNumber) &&
+                Objects.equals(floorsAmount, that.floorsAmount) &&
                 Objects.equals(hasElevator, that.hasElevator) &&
-                Objects.equals(apartmentsNumber, that.apartmentsNumber) &&
+                Objects.equals(apartmentsAmount, that.apartmentsAmount) &&
                 Objects.equals(apartmentIds, that.apartmentIds);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(version, id, description, location, floorsNumber, hasElevator, apartmentsNumber, apartmentIds);
+        return Objects.hash(version, id, description, location, floorsAmount, hasElevator, apartmentsAmount, apartmentIds);
     }
 }

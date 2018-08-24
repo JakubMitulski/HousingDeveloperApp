@@ -28,32 +28,32 @@ public class CustomizedApartmentRepositoryImpl extends AbstractRepository<Apartm
             queryBuilder.append("a.area <= :maxArea");
             canAppendQueryByAnd = true;
         }
-        if (criteriaApartmentTo.getMinRoomsNumber() != null) {
+        if (criteriaApartmentTo.getMinRoomsAmount() != null) {
             if (canAppendQueryByAnd) {
                 queryBuilder.append(" and ");
             }
-            queryBuilder.append("a.roomsNumber >= :minRoomsNumber");
+            queryBuilder.append("a.roomsAmount >= :minRoomsAmount");
             canAppendQueryByAnd = true;
         }
-        if (criteriaApartmentTo.getMaxRoomsNumber() != null) {
+        if (criteriaApartmentTo.getMaxRoomsAmount() != null) {
             if (canAppendQueryByAnd) {
                 queryBuilder.append(" and ");
             }
-            queryBuilder.append("a.roomsNumber <= :maxRoomsNumber");
+            queryBuilder.append("a.roomsAmount <= :maxRoomsAmount");
             canAppendQueryByAnd = true;
         }
-        if (criteriaApartmentTo.getMinBalconiesNumber() != null) {
+        if (criteriaApartmentTo.getMinBalconiesAmount() != null) {
             if (canAppendQueryByAnd) {
                 queryBuilder.append(" and ");
             }
-            queryBuilder.append("a.balconiesNumber >= :minBalconiesNumber");
+            queryBuilder.append("a.balconiesAmount >= :minBalconiesAmount");
             canAppendQueryByAnd = true;
         }
-        if (criteriaApartmentTo.getMaxBalconiesNumber() != null) {
+        if (criteriaApartmentTo.getMaxBalconiesAmount() != null) {
             if (canAppendQueryByAnd) {
                 queryBuilder.append(" and ");
             }
-            queryBuilder.append("a.balconiesNumber <= :maxBalconiesNumber");
+            queryBuilder.append("a.balconiesAmount <= :maxBalconiesAmount");
         }
 
         TypedQuery<ApartmentEntity> query = entityManager.createQuery(queryBuilder.toString(), ApartmentEntity.class);
@@ -64,17 +64,17 @@ public class CustomizedApartmentRepositoryImpl extends AbstractRepository<Apartm
         if (criteriaApartmentTo.getMaxArea() != null) {
             query.setParameter("maxArea", criteriaApartmentTo.getMaxArea());
         }
-        if (criteriaApartmentTo.getMinRoomsNumber() != null) {
-            query.setParameter("minRoomsNumber", criteriaApartmentTo.getMinRoomsNumber());
+        if (criteriaApartmentTo.getMinRoomsAmount() != null) {
+            query.setParameter("minRoomsAmount", criteriaApartmentTo.getMinRoomsAmount());
         }
-        if (criteriaApartmentTo.getMaxRoomsNumber() != null) {
-            query.setParameter("maxRoomsNumber", criteriaApartmentTo.getMaxRoomsNumber());
+        if (criteriaApartmentTo.getMaxRoomsAmount() != null) {
+            query.setParameter("maxRoomsAmount", criteriaApartmentTo.getMaxRoomsAmount());
         }
-        if (criteriaApartmentTo.getMinBalconiesNumber() != null) {
-            query.setParameter("minBalconiesNumber", criteriaApartmentTo.getMinBalconiesNumber());
+        if (criteriaApartmentTo.getMinBalconiesAmount() != null) {
+            query.setParameter("minBalconiesAmount", criteriaApartmentTo.getMinBalconiesAmount());
         }
-        if (criteriaApartmentTo.getMaxBalconiesNumber() != null) {
-            query.setParameter("maxBalconiesNumber", criteriaApartmentTo.getMaxBalconiesNumber());
+        if (criteriaApartmentTo.getMaxBalconiesAmount() != null) {
+            query.setParameter("maxBalconiesAmount", criteriaApartmentTo.getMaxBalconiesAmount());
         }
 
         return query.getResultList();

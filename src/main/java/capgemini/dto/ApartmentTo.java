@@ -16,9 +16,9 @@ public class ApartmentTo {
     private int version;
     private Long id;
     private Double area;
-    private Integer roomsNumber;
-    private Integer balconiesNumber;
-    private Integer floor;
+    private Integer roomsAmount;
+    private Integer balconiesAmount;
+    private Integer floorNumber;
     private String address;
     private String status;
     private Long buildingId;
@@ -33,9 +33,9 @@ public class ApartmentTo {
         private int version;
         private Long id;
         private Double area;
-        private Integer roomsNumber;
-        private Integer balconiesNumber;
-        private Integer floor;
+        private Integer roomsAmount;
+        private Integer balconiesAmount;
+        private Integer floorNumber;
         private String address;
         private String status;
         private Long buildingId;
@@ -56,18 +56,18 @@ public class ApartmentTo {
             return this;
         }
 
-        public ApartmentToBuilder withRoomsNumber(Integer roomsNumber) {
-            this.roomsNumber = roomsNumber;
+        public ApartmentToBuilder withRoomsAmount(Integer roomsAmount) {
+            this.roomsAmount = roomsAmount;
             return this;
         }
 
-        public ApartmentToBuilder withBalconiesNumber(Integer balconiesNumber) {
-            this.balconiesNumber = balconiesNumber;
+        public ApartmentToBuilder withBalconiesAmount(Integer balconiesAmount) {
+            this.balconiesAmount = balconiesAmount;
             return this;
         }
 
-        public ApartmentToBuilder withfloor(Integer floor) {
-            this.floor = floor;
+        public ApartmentToBuilder withFloorNumber(Integer floorNumber) {
+            this.floorNumber = floorNumber;
             return this;
         }
 
@@ -92,17 +92,17 @@ public class ApartmentTo {
         }
 
         public ApartmentTo build() {
-            checkBeforeBuild(area, roomsNumber, balconiesNumber, floor, address, status, buildingId);
-            return new ApartmentTo(version, id, area, roomsNumber, balconiesNumber, floor, address, status, buildingId, price);
+            checkBeforeBuild(area, roomsAmount, balconiesAmount, floorNumber, address, status, buildingId);
+            return new ApartmentTo(version, id, area, roomsAmount, balconiesAmount, floorNumber, address, status, buildingId, price);
         }
 
-        private void checkBeforeBuild(Double area, Integer roomsNumber,
-                                      Integer balconiesNumber, Integer floor, String address,
+        private void checkBeforeBuild(Double area, Integer roomsAmount,
+                                      Integer balconiesAmount, Integer floorNumber, String address,
                                       String status, Long buildingId) {
             if (area == null ||
-                    roomsNumber == null ||
-                    balconiesNumber == null ||
-                    floor == null ||
+                    roomsAmount == null ||
+                    balconiesAmount == null ||
+                    floorNumber == null ||
                     address == null || address.isEmpty() ||
                     status == null || status.isEmpty() ||
                     buildingId == null) {
@@ -119,16 +119,17 @@ public class ApartmentTo {
         return version == that.version &&
                 Objects.equals(id, that.id) &&
                 Objects.equals(area, that.area) &&
-                Objects.equals(roomsNumber, that.roomsNumber) &&
-                Objects.equals(balconiesNumber, that.balconiesNumber) &&
-                Objects.equals(floor, that.floor) &&
+                Objects.equals(roomsAmount, that.roomsAmount) &&
+                Objects.equals(balconiesAmount, that.balconiesAmount) &&
+                Objects.equals(floorNumber, that.floorNumber) &&
                 Objects.equals(address, that.address) &&
                 Objects.equals(status, that.status) &&
-                Objects.equals(buildingId, that.buildingId);
+                Objects.equals(buildingId, that.buildingId) &&
+                Objects.equals(price, that.price);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(version, id, area, roomsNumber, balconiesNumber, floor, address, status, buildingId);
+        return Objects.hash(version, id, area, roomsAmount, balconiesAmount, floorNumber, address, status, buildingId, price);
     }
 }

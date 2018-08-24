@@ -29,11 +29,11 @@ public class BuildingEntity extends AbstractEntity implements Serializable {
     @Column(nullable = false)
     private String location;
     @Column(nullable = false)
-    private Integer floorsNumber;
+    private Integer floorsAmount;
     @Column(nullable = false)
     private Boolean hasElevator;
     @Column(nullable = false)
-    private Integer apartmentsNumber;
+    private Integer apartmentsAmount;
 
     @OneToMany(mappedBy = "building", cascade = CascadeType.REMOVE)
     private List<ApartmentEntity> apartments = new ArrayList<>();

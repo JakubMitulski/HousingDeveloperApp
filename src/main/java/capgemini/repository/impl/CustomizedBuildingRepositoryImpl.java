@@ -1,6 +1,7 @@
 package capgemini.repository.impl;
 
 import capgemini.entities.ApartmentEntity;
+import capgemini.entities.BuildingEntity;
 import capgemini.repository.CustomizedBuildingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -27,5 +28,10 @@ public class CustomizedBuildingRepositoryImpl extends AbstractRepository<Apartme
         query.setParameter("buildingId", buildingId);
         query.setParameter("status", status);
         return query.getSingleResult();
+    }
+
+    @Override
+    public BuildingEntity findBuildingWithLargestAmountOfAvailableApartments() {
+        return null;
     }
 }

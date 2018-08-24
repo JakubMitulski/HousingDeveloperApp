@@ -24,11 +24,11 @@ public class ApartmentEntity extends AbstractEntity implements Serializable {
     @Column(nullable = false)
     private Double area;
     @Column(nullable = false)
-    private Integer roomsNumber;
+    private Integer roomsAmount;
     @Column(nullable = false)
-    private Integer balconiesNumber;
+    private Integer balconiesAmount;
     @Column(nullable = false)
-    private Integer floor;
+    private Integer floorNumber;
     @Column(nullable = false)
     private String address;
     @Column(nullable = false)

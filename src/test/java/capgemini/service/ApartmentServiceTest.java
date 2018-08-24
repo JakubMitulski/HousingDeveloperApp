@@ -47,18 +47,18 @@ public class ApartmentServiceTest {
         BuildingTo buildingTo = new BuildingTo.BuildingToBuilder()
                 .withDescription("Test description")
                 .withLocation("Test location")
-                .withFloorsNumber(2)
+                .withFloorsAmount(2)
                 .withElevator(false)
-                .withApartmentsNumber(12)
+                .withApartmentsAmount(12)
                 .withApartmentIds(new ArrayList<>())
                 .build();
         BuildingTo buildingWithoutApartment = buildingService.addNewBuilding(buildingTo);
 
         ApartmentTo apartmentTo = new ApartmentTo.ApartmentToBuilder()
                 .withArea(42.0)
-                .withRoomsNumber(2)
-                .withBalconiesNumber(1)
-                .withfloor(2)
+                .withRoomsAmount(2)
+                .withBalconiesAmount(1)
+                .withFloorNumber(2)
                 .withAddress("Test address")
                 .withStatus("Bought")
                 .withBuildingId(buildingWithoutApartment.getId())
@@ -68,9 +68,9 @@ public class ApartmentServiceTest {
 
         ApartmentTo apartmentTo1 = new ApartmentTo.ApartmentToBuilder()
                 .withArea(30.0)
-                .withRoomsNumber(1)
-                .withBalconiesNumber(0)
-                .withfloor(2)
+                .withRoomsAmount(1)
+                .withBalconiesAmount(0)
+                .withFloorNumber(2)
                 .withAddress("Test address")
                 .withStatus("Bought")
                 .withBuildingId(buildingWithoutApartment.getId())
@@ -80,9 +80,9 @@ public class ApartmentServiceTest {
 
         ApartmentTo apartmentTo2 = new ApartmentTo.ApartmentToBuilder()
                 .withArea(90.0)
-                .withRoomsNumber(5)
-                .withBalconiesNumber(4)
-                .withfloor(2)
+                .withRoomsAmount(5)
+                .withBalconiesAmount(4)
+                .withFloorNumber(2)
                 .withAddress("Test address")
                 .withStatus("Bought")
                 .withBuildingId(buildingWithoutApartment.getId())
@@ -92,9 +92,9 @@ public class ApartmentServiceTest {
 
         ApartmentTo apartmentTo3 = new ApartmentTo.ApartmentToBuilder()
                 .withArea(60.0)
-                .withRoomsNumber(3)
-                .withBalconiesNumber(2)
-                .withfloor(2)
+                .withRoomsAmount(3)
+                .withBalconiesAmount(2)
+                .withFloorNumber(2)
                 .withAddress("Test address")
                 .withStatus("Bought")
                 .withBuildingId(buildingWithoutApartment.getId())
@@ -104,9 +104,9 @@ public class ApartmentServiceTest {
 
         ApartmentTo apartmentTo4 = new ApartmentTo.ApartmentToBuilder()
                 .withArea(10.0)
-                .withRoomsNumber(1)
-                .withBalconiesNumber(0)
-                .withfloor(0)
+                .withRoomsAmount(1)
+                .withBalconiesAmount(0)
+                .withFloorNumber(0)
                 .withAddress("Test address")
                 .withStatus("Booked")
                 .withBuildingId(buildingWithoutApartment.getId())
@@ -172,9 +172,9 @@ public class ApartmentServiceTest {
         //Given
         ApartmentTo testApartment = new ApartmentTo.ApartmentToBuilder()
                 .withArea(42.0)
-                .withRoomsNumber(2)
-                .withBalconiesNumber(1)
-                .withfloor(2)
+                .withRoomsAmount(2)
+                .withBalconiesAmount(1)
+                .withFloorNumber(2)
                 .withAddress("Test address")
                 .withStatus("Bought")
                 .withBuildingId(building.getId())
@@ -220,10 +220,10 @@ public class ApartmentServiceTest {
         CriteriaApartmentTo criteriaApartmentTo = new CriteriaApartmentTo.CriteriaApartmentToBuilder()
                 .withMinArea(40.0)
                 .withMaxArea(80.0)
-                .withMinRoomsNumber(2)
-                .withMaxRoomsNumber(4)
-                .withMinBalconiesNumber(1)
-                .withMaxBalconiesNumber(3)
+                .withMinRoomsAmount(2)
+                .withMaxRoomsAmount(4)
+                .withMinBalconiesAmount(1)
+                .withMaxBalconiesAmount(3)
                 .build();
 
         //When
@@ -239,8 +239,8 @@ public class ApartmentServiceTest {
         //Given
         CriteriaApartmentTo criteriaApartmentTo = new CriteriaApartmentTo.CriteriaApartmentToBuilder()
                 .withMinArea(40.0)
-                .withMinRoomsNumber(2)
-                .withMinBalconiesNumber(1)
+                .withMinRoomsAmount(2)
+                .withMinBalconiesAmount(1)
                 .build();
 
         //When
@@ -255,7 +255,7 @@ public class ApartmentServiceTest {
     public void shouldFindApartmentsByMaxRoomParam() {
         //Given
         CriteriaApartmentTo criteriaApartmentTo = new CriteriaApartmentTo.CriteriaApartmentToBuilder()
-                .withMaxRoomsNumber(2)
+                .withMaxRoomsAmount(2)
                 .build();
 
         //When

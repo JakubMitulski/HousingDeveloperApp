@@ -18,9 +18,9 @@ public class BuildingMapper {
                 .withId(buildingEntity.getId())
                 .withDescription(buildingEntity.getDescription())
                 .withLocation(buildingEntity.getLocation())
-                .withFloorsNumber(buildingEntity.getFloorsNumber())
+                .withFloorsAmount(buildingEntity.getFloorsAmount())
                 .withElevator(buildingEntity.getHasElevator())
-                .withApartmentsNumber(buildingEntity.getApartmentsNumber())
+                .withApartmentsAmount(buildingEntity.getApartmentsAmount())
                 .withApartmentIds(buildingEntity.getApartments()
                         .stream()
                         .map(ApartmentEntity::getId)
@@ -37,9 +37,9 @@ public class BuildingMapper {
         buildingEntity.setId(buildingTo.getId());
         buildingEntity.setDescription(buildingTo.getDescription());
         buildingEntity.setLocation(buildingTo.getLocation());
-        buildingEntity.setFloorsNumber(buildingTo.getFloorsNumber());
+        buildingEntity.setFloorsAmount(buildingTo.getFloorsAmount());
         buildingEntity.setHasElevator(buildingTo.getHasElevator());
-        buildingEntity.setApartmentsNumber(buildingTo.getApartmentsNumber());
+        buildingEntity.setApartmentsAmount(buildingTo.getApartmentsAmount());
 
         return buildingEntity;
     }
