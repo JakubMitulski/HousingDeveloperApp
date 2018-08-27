@@ -5,6 +5,7 @@ import capgemini.dto.CriteriaApartmentTo;
 import capgemini.entities.ApartmentEntity;
 import capgemini.entities.BuildingEntity;
 import capgemini.exception.ApartmentNotFoundException;
+import capgemini.exception.BuildingNotFoundException;
 import capgemini.mappers.ApartmentMapper;
 import capgemini.repository.ApartmentRepository;
 import capgemini.repository.BuildingRepository;
@@ -30,7 +31,10 @@ public class ApartamentServiceImpl implements ApartmentService {
     private CustomerRepository customerRepository;
 
     @Override
-    public ApartmentTo addNewApartment(ApartmentTo apartmentTo) {
+    public ApartmentTo addNewApartment(ApartmentTo apartmentTo) throws BuildingNotFoundException {
+        if (apartmentTo.getBuildingId() == null || !buildingRepository.existsById(apartmentTo.getBuildingId())) {
+            throw new BuildingNotFoundException();
+        }
         ApartmentEntity apartmentEntity = ApartmentMapper.toApartmentEntity(apartmentTo);
 
         BuildingEntity buildingEntity = buildingRepository.findById(apartmentTo.getBuildingId()).get();
@@ -38,21 +42,21 @@ public class ApartamentServiceImpl implements ApartmentService {
 
         ApartmentEntity savedApartment = apartmentRepository.save(apartmentEntity);
 
-        buildingEntity.addApartmentToBuilding(apartmentEntity);
+        buildingEntity.getApartments().add(apartmentEntity);
         buildingRepository.save(buildingEntity);
 
         return ApartmentMapper.toApartmentTo(savedApartment);
     }
 
     @Override
-    public ApartmentTo findApartmentById(Long id) {
+    public ApartmentTo findApartmentById(Long id) throws ApartmentNotFoundException {
         ApartmentEntity apartmentEntity = apartmentRepository
                 .findById(id).orElseThrow(ApartmentNotFoundException::new);
         return ApartmentMapper.toApartmentTo(apartmentEntity);
     }
 
     @Override
-    public ApartmentTo findApartmentByAddress(String address) {
+    public ApartmentTo findApartmentByAddress(String address) throws ApartmentNotFoundException {
         ApartmentEntity apartmentEntity = apartmentRepository.findByAddress(address);
         if (apartmentEntity == null) {
             throw new ApartmentNotFoundException();
@@ -61,7 +65,7 @@ public class ApartamentServiceImpl implements ApartmentService {
     }
 
     @Override
-    public ApartmentTo updateApartment(ApartmentTo apartmentTo) {
+    public ApartmentTo updateApartment(ApartmentTo apartmentTo) throws ApartmentNotFoundException {
         if (apartmentTo.getId() == null || !apartmentRepository.existsById(apartmentTo.getId())) {
             throw new ApartmentNotFoundException();
         }
@@ -76,14 +80,14 @@ public class ApartamentServiceImpl implements ApartmentService {
     }
 
     @Override
-    public void deleteApartment(ApartmentTo apartmentTo) {
+    public void deleteApartment(ApartmentTo apartmentTo) throws ApartmentNotFoundException {
         if (apartmentTo.getId() == null || !apartmentRepository.existsById(apartmentTo.getId())) {
             throw new ApartmentNotFoundException();
         }
         ApartmentEntity apartmentEntity = ApartmentMapper.toApartmentEntity(apartmentTo);
 
         BuildingEntity buildingEntity = buildingRepository.findById(apartmentTo.getBuildingId()).get();
-        buildingEntity.removeApartmentFromBuilding(apartmentEntity);
+        buildingEntity.getApartments().remove(apartmentEntity);
         buildingRepository.save(buildingEntity);
 
         apartmentRepository.deleteById(apartmentTo.getId());

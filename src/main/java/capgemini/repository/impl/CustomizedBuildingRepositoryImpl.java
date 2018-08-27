@@ -2,14 +2,22 @@ package capgemini.repository.impl;
 
 import capgemini.entities.ApartmentEntity;
 import capgemini.entities.BuildingEntity;
+import capgemini.entities.QApartmentEntity;
+import capgemini.entities.QBuildingEntity;
 import capgemini.repository.CustomizedBuildingRepository;
+import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
 public class CustomizedBuildingRepositoryImpl extends AbstractRepository<ApartmentEntity, Long> implements CustomizedBuildingRepository {
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Override
     public Double calculateAvgApartmentPriceOfBuilding(Long buildingId) {
@@ -33,6 +41,33 @@ public class CustomizedBuildingRepositoryImpl extends AbstractRepository<Apartme
 
     @Override
     public List<BuildingEntity> findBuildingWithLargestAmountOfAvailableApartments() {
-        return null;
+        JPAQuery<BuildingEntity> query1 = new JPAQuery<>(em);
+        JPAQuery<BuildingEntity> query2 = new JPAQuery<>(em);
+        QBuildingEntity building = QBuildingEntity.buildingEntity;
+        QApartmentEntity apartment = QApartmentEntity.apartmentEntity;
+
+        Long largestAmount = query1
+                .select(building.id.count())
+                .from(building)
+                .join(building.apartments, apartment)
+                .where(apartment.status.like("Available"))
+                .groupBy(building.id)
+                .orderBy(building.id.count().desc())
+                .fetchFirst();
+
+        if (largestAmount == null){
+            largestAmount = 0L;
+        }
+
+        List<BuildingEntity> buildingEntities = query2
+                .select(building)
+                .from(building)
+                .join(building.apartments, apartment)
+                .where(apartment.status.like("Available"))
+                .groupBy(building.id)
+                .having(building.id.count().eq(largestAmount))
+                .fetch();
+
+        return buildingEntities;
     }
 }

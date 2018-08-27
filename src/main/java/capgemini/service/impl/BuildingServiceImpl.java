@@ -33,14 +33,14 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public BuildingTo findBuildingById(Long id) {
+    public BuildingTo findBuildingById(Long id) throws BuildingNotFoundException {
         BuildingEntity buildingEntity = buildingRepository.findById(id).orElseThrow(BuildingNotFoundException::new);
         return BuildingMapper.toBuildingTo(buildingEntity);
 
     }
 
     @Override
-    public BuildingTo findBuildingByLocation(String location) {
+    public BuildingTo findBuildingByLocation(String location) throws BuildingNotFoundException {
         BuildingEntity buildingEntity = buildingRepository.findByLocation(location);
         if (buildingEntity == null) {
             throw new BuildingNotFoundException();
@@ -49,7 +49,7 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public BuildingTo updateBuilding(BuildingTo buildingTo) {
+    public BuildingTo updateBuilding(BuildingTo buildingTo) throws BuildingNotFoundException {
         if (buildingTo.getId() == null || !buildingRepository.existsById(buildingTo.getId())) {
             throw new BuildingNotFoundException();
         }
@@ -69,7 +69,7 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public void deleteBuilding(BuildingTo buildingTo) {
+    public void deleteBuilding(BuildingTo buildingTo) throws BuildingNotFoundException {
         if (buildingTo.getId() == null || !buildingRepository.existsById(buildingTo.getId())) {
             throw new BuildingNotFoundException();
         }
@@ -77,12 +77,18 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public Double calculateAvgApartmentPriceOfBuilding(BuildingTo buildingTo) {
+    public Double calculateAvgApartmentPriceOfBuilding(BuildingTo buildingTo) throws BuildingNotFoundException {
+        if (buildingTo.getId() == null || !buildingRepository.existsById(buildingTo.getId())) {
+            throw new BuildingNotFoundException();
+        }
         return buildingRepository.calculateAvgApartmentPriceOfBuilding(buildingTo.getId());
     }
 
     @Override
-    public Long countApartmentsWithSpecifiedStatusInSpecifiedBuilding(String status, BuildingTo buildingTo) {
+    public Long countApartmentsWithSpecifiedStatusInSpecifiedBuilding(String status, BuildingTo buildingTo) throws BuildingNotFoundException {
+        if (buildingTo.getId() == null || !buildingRepository.existsById(buildingTo.getId())) {
+            throw new BuildingNotFoundException();
+        }
         return buildingRepository
                 .countApartmentsWithSpecifiedStatusInSpecifiedBuilding(status, buildingTo.getId());
     }

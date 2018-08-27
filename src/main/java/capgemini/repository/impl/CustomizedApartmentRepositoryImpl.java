@@ -14,46 +14,25 @@ public class CustomizedApartmentRepositoryImpl extends AbstractRepository<Apartm
     @Override
     public List<ApartmentEntity> findApartmentsByCriteria(CriteriaApartmentTo criteriaApartmentTo) {
         StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append("select a from ApartmentEntity a where a.status not like 'Bought' and ");
-        boolean canAppendQueryByAnd = false;
+        queryBuilder.append("select a from ApartmentEntity a where a.status not like 'Bought' ");
 
         if (criteriaApartmentTo.getMinArea() != null) {
-            queryBuilder.append("a.area >= :minArea");
-            canAppendQueryByAnd = true;
+            queryBuilder.append("and a.area >= :minArea ");
         }
         if (criteriaApartmentTo.getMaxArea() != null) {
-            if (canAppendQueryByAnd) {
-                queryBuilder.append(" and ");
-            }
-            queryBuilder.append("a.area <= :maxArea");
-            canAppendQueryByAnd = true;
+            queryBuilder.append("and a.area <= :maxArea ");
         }
         if (criteriaApartmentTo.getMinRoomsAmount() != null) {
-            if (canAppendQueryByAnd) {
-                queryBuilder.append(" and ");
-            }
-            queryBuilder.append("a.roomsAmount >= :minRoomsAmount");
-            canAppendQueryByAnd = true;
+            queryBuilder.append("and a.roomsAmount >= :minRoomsAmount ");
         }
         if (criteriaApartmentTo.getMaxRoomsAmount() != null) {
-            if (canAppendQueryByAnd) {
-                queryBuilder.append(" and ");
-            }
-            queryBuilder.append("a.roomsAmount <= :maxRoomsAmount");
-            canAppendQueryByAnd = true;
+            queryBuilder.append("and a.roomsAmount <= :maxRoomsAmount ");
         }
         if (criteriaApartmentTo.getMinBalconiesAmount() != null) {
-            if (canAppendQueryByAnd) {
-                queryBuilder.append(" and ");
-            }
-            queryBuilder.append("a.balconiesAmount >= :minBalconiesAmount");
-            canAppendQueryByAnd = true;
+            queryBuilder.append("and a.balconiesAmount >= :minBalconiesAmount ");
         }
         if (criteriaApartmentTo.getMaxBalconiesAmount() != null) {
-            if (canAppendQueryByAnd) {
-                queryBuilder.append(" and ");
-            }
-            queryBuilder.append("a.balconiesAmount <= :maxBalconiesAmount");
+            queryBuilder.append("and a.balconiesAmount <= :maxBalconiesAmount");
         }
 
         TypedQuery<ApartmentEntity> query = entityManager.createQuery(queryBuilder.toString(), ApartmentEntity.class);

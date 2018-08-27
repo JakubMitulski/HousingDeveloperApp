@@ -1,5 +1,5 @@
 package capgemini.exception;
 
-public class BuildingNotFoundException extends RuntimeException {
+public class BuildingNotFoundException extends Exception {
 
 }

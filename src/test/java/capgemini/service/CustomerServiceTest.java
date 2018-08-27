@@ -3,6 +3,9 @@ package capgemini.service;
 import capgemini.dto.ApartmentTo;
 import capgemini.dto.BuildingTo;
 import capgemini.dto.CustomerTo;
+import capgemini.exception.ApartmentNotFoundException;
+import capgemini.exception.BuildingNotFoundException;
+import capgemini.exception.CustomerNotFoundException;
 import capgemini.exception.ToManyBookingsException;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,14 +40,14 @@ public class CustomerServiceTest {
     private ApartmentTo testApartment3;
     private ApartmentTo testApartment4;
     private ApartmentTo testApartment5;
-    private ApartmentTo testApartment6;
-    private BuildingTo building;
     private CustomerTo customer;
     private CustomerTo testCustomer1;
     private CustomerTo testCustomer2;
+    private final String booked = "Booked";
+    private final String bought = "Bought";
 
     @Before
-    public void init() {
+    public void init() throws BuildingNotFoundException {
         BuildingTo buildingTo = new BuildingTo.BuildingToBuilder()
                 .withDescription("Test description")
                 .withLocation("Test location")
@@ -61,7 +64,7 @@ public class CustomerServiceTest {
                 .withBalconiesAmount(1)
                 .withFloorNumber(2)
                 .withAddress("Test address")
-                .withStatus("Bought")
+                .withStatus(bought)
                 .withBuildingId(buildingWithoutApartment.getId())
                 .withPrice(100000.0D)
                 .build();
@@ -73,7 +76,7 @@ public class CustomerServiceTest {
                 .withBalconiesAmount(3)
                 .withFloorNumber(7)
                 .withAddress("Some address")
-                .withStatus("Bought")
+                .withStatus(bought)
                 .withBuildingId(buildingWithoutApartment.getId())
                 .withPrice(200000.0D)
                 .build();
@@ -133,13 +136,13 @@ public class CustomerServiceTest {
                 .withBalconiesAmount(3)
                 .withFloorNumber(7)
                 .withAddress("Some address")
-                .withStatus("Bought")
+                .withStatus(bought)
                 .withBuildingId(buildingWithoutApartment.getId())
                 .withPrice(170000.0D)
                 .build();
-        testApartment6 = apartmentService.addNewApartment(apartmentToTest6);
+        ApartmentTo testApartment6 = apartmentService.addNewApartment(apartmentToTest6);
 
-        building = buildingService.updateBuilding(buildingService.findBuildingById(buildingWithoutApartment.getId()));
+        BuildingTo building = buildingService.updateBuilding(buildingService.findBuildingById(buildingWithoutApartment.getId()));
 
         ArrayList<Long> apartmentIds = new ArrayList<>();
         apartmentIds.add(apartment.getId());
@@ -172,7 +175,7 @@ public class CustomerServiceTest {
 
     @Test
     @Transactional
-    public void shouldFindCustomerById() {
+    public void shouldFindCustomerById() throws CustomerNotFoundException {
         //When
         CustomerTo customerById = customerService.findCustomerById(customer.getId());
 
@@ -182,18 +185,21 @@ public class CustomerServiceTest {
 
     @Test
     @Transactional
-    public void shouldUpdateCustomer() {
+    public void shouldUpdateCustomer() throws CustomerNotFoundException {
+        //Given
+        String updatedName = "Updated name";
+
         //When
-        customer.setFirstName("Updated name");
+        customer.setFirstName(updatedName);
         CustomerTo updatedCustomer = customerService.updateCustomer(customer);
 
         //Then
-        assertEquals("Updated name", updatedCustomer.getFirstName());
+        assertEquals(updatedName, updatedCustomer.getFirstName());
     }
 
     @Test
     @Transactional
-    public void shouldAddNewCustomer() {
+    public void shouldAddNewCustomer() throws CustomerNotFoundException {
         //Given
         CustomerTo customerTo = new CustomerTo.CustomerToBuilder()
                 .withFirstName("jan")
@@ -213,7 +219,7 @@ public class CustomerServiceTest {
 
     @Test(expected = OptimisticLockingFailureException.class)
     @Transactional
-    public void shouldTestOptimisticLookingException() {
+    public void shouldTestOptimisticLookingException() throws CustomerNotFoundException {
         //When
         customer.setLastName("Successful update");
         customerService.updateCustomer(customer);
@@ -226,32 +232,38 @@ public class CustomerServiceTest {
     @Test
     @Transactional
     public void shouldFindCustomersWhoHasApartment() {
+        //Given
+        int resultListSize = 1;
+
         //When
         List<CustomerTo> customers = customerService.findCustomersWhoHasApartment(apartment);
 
         //Then
-        assertEquals(1, customers.size());
+        assertEquals(resultListSize, customers.size());
     }
 
     @Test
     @Transactional
-    public void shouldCustomerBuyApartment() {
+    public void shouldCustomerBuyApartment() throws CustomerNotFoundException, ApartmentNotFoundException {
+        //Given
+        int resultListSize = 3;
+
         //When
         CustomerTo customerWhoBought = customerService.buyApartment(testApartment1, customer);
         ApartmentTo apartmentById = apartmentService.findApartmentById(testApartment1.getId());
 
         //Then
-        assertEquals(apartmentById.getStatus(), "BOUGHT");
-        assertEquals(3, customerWhoBought.getApartmentIds().size());
+        assertEquals(bought, apartmentById.getStatus());
+        assertEquals(resultListSize, customerWhoBought.getApartmentIds().size());
     }
 
     @Test(expected = ToManyBookingsException.class)
     @Transactional
-    public void shouldCustomerBookApartment() {
+    public void shouldCustomerBookApartment() throws CustomerNotFoundException, ApartmentNotFoundException, ToManyBookingsException {
         //When
         customerService.bookApartment(testApartment1, testCustomer1);
         customerService.bookApartment(testApartment2, customerService.findCustomerById(testCustomer1.getId()));
-        CustomerTo testujemy = customerService.bookApartment(testApartment3, customerService.findCustomerById(testCustomer1.getId()));
+        customerService.bookApartment(testApartment3, customerService.findCustomerById(testCustomer1.getId()));
         customerService.bookApartment(testApartment3, testCustomer2);
         customerService.bookApartment(testApartment4, customerService.findCustomerById(testCustomer1.getId()));
 
@@ -259,7 +271,7 @@ public class CustomerServiceTest {
         CustomerTo customerById = customerService.findCustomerById(testCustomer1.getId());
 
         //Then
-        assertEquals(apartmentById.getStatus(), "BOOKED");
+        assertEquals(booked, apartmentById.getStatus());
         assertEquals(customerById.getApartmentIds().get(0), testApartment1.getId());
         customerService.bookApartment(testApartment5, customerService.findCustomerById(testCustomer1.getId()));
     }
@@ -267,20 +279,26 @@ public class CustomerServiceTest {
     @Test
     @Transactional
     public void shouldFindCustomersWhoBoughtMoreThanOneApartment() {
+        //Given
+        int resultListSize = 1;
+
         //When
         List<CustomerTo> customers = customerService.findCustomersWhoBoughtMoreThanOneApartment();
 
         //Then
-        assertEquals(1, customers.size());
+        assertEquals(resultListSize, customers.size());
     }
 
     @Test
     @Transactional
-    public void shouldCalculateApartmentsTotalPriceBoughtBySpecifiedCustomer() {
+    public void shouldCalculateApartmentsTotalPriceBoughtBySpecifiedCustomer() throws CustomerNotFoundException {
+        //Given
+        Double resultTotalPrice = 270000.0D;
+
         //When
         Double price = customerService.calculateApartmentsTotalPriceBoughtBySpecifiedCustomer(customer);
 
         //Then
-        assertEquals(Double.valueOf(270000.0D), price);
+        assertEquals(resultTotalPrice, price);
     }
 }

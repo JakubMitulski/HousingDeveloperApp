@@ -21,23 +21,22 @@ public class ApartmentEntity extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(nullable = false)
+    @Column(nullable = false,  columnDefinition = "DOUBLE DEFAULT 0.0")
     private Double area;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 0")
     private Integer roomsAmount;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 0")
     private Integer balconiesAmount;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 0")
     private Integer floorNumber;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(45) DEFAULT ''")
     private String address;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(45) DEFAULT ''")
     private String status;
-    @Column
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0")
     private Double price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "building")
     private BuildingEntity building;
-
 }

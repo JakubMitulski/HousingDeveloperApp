@@ -1,5 +1,5 @@
 package capgemini.exception;
 
-public class BadActionException extends RuntimeException {
+public class BadActionException extends Exception {
 
 }

@@ -23,9 +23,9 @@ public class CustomerEntity extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(45) DEFAULT ''")
     private String firstName;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(45) DEFAULT ''")
     private String lastName;
     @Column(nullable = false)
     private Long phone;
@@ -36,9 +36,4 @@ public class CustomerEntity extends AbstractEntity implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "customer_id", nullable = false, updatable = false)}
     )
     private List<ApartmentEntity> apartments = new ArrayList<>();
-
-    public void addApartmentToCustomer(ApartmentEntity apartmentEntity) {
-        this.apartments.add(apartmentEntity);
-    }
-
 }

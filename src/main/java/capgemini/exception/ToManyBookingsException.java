@@ -1,5 +1,5 @@
 package capgemini.exception;
 
-public class ToManyBookingsException extends RuntimeException {
+public class ToManyBookingsException extends Exception {
 
 }

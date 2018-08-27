@@ -3,7 +3,6 @@ package capgemini.service.impl;
 import capgemini.dto.ApartmentTo;
 import capgemini.dto.CustomerTo;
 import capgemini.entities.ApartmentEntity;
-import capgemini.entities.BuildingEntity;
 import capgemini.entities.CustomerEntity;
 import capgemini.exception.ApartmentNotFoundException;
 import capgemini.exception.CustomerNotFoundException;
@@ -31,8 +30,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private ApartmentRepository apartmentRepository;
 
-    private final static String BOUGHT = "BOUGHT";
-    private final static String BOOKED = "BOOKED";
+    private final static String BOUGHT = "Bought";
+    private final static String BOOKED = "Booked";
 
     @Override
     public CustomerTo addNewCustomer(CustomerTo customerTo) {
@@ -52,13 +51,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerTo findCustomerById(Long id) {
+    public CustomerTo findCustomerById(Long id) throws CustomerNotFoundException {
         CustomerEntity customerEntity = customerRepository.findById(id).orElseThrow(CustomerNotFoundException::new);
         return CustomerMapper.toCustomerTo(customerEntity);
     }
 
     @Override
-    public CustomerTo updateCustomer(CustomerTo customerTo) {
+    public CustomerTo updateCustomer(CustomerTo customerTo) throws CustomerNotFoundException {
         if (customerTo.getId() == null || !customerRepository.existsById(customerTo.getId())) {
             throw new CustomerNotFoundException();
         }
@@ -85,7 +84,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerTo buyApartment(ApartmentTo apartmentTo, CustomerTo customerTo) {
+    public CustomerTo buyApartment(ApartmentTo apartmentTo, CustomerTo customerTo) throws ApartmentNotFoundException, CustomerNotFoundException {
         ApartmentEntity apartmentEntity = apartmentRepository.findById(apartmentTo.getId())
                 .orElseThrow(ApartmentNotFoundException::new);
         CustomerEntity customerEntity = customerRepository.findById(customerTo.getId())
@@ -94,14 +93,14 @@ public class CustomerServiceImpl implements CustomerService {
         apartmentEntity.setStatus(BOUGHT);
         ApartmentEntity updatedApartment = apartmentRepository.save(apartmentEntity);
 
-        customerEntity.addApartmentToCustomer(updatedApartment);
+        customerEntity.getApartments().add(updatedApartment);
         CustomerEntity updatedCustomer = customerRepository.save(customerEntity);
 
         return CustomerMapper.toCustomerTo(updatedCustomer);
     }
 
     @Override
-    public CustomerTo bookApartment(ApartmentTo apartmentTo, CustomerTo customerTo) {
+    public CustomerTo bookApartment(ApartmentTo apartmentTo, CustomerTo customerTo) throws ApartmentNotFoundException, CustomerNotFoundException, ToManyBookingsException {
         ApartmentEntity apartmentEntity = apartmentRepository.findById(apartmentTo.getId())
                 .orElseThrow(ApartmentNotFoundException::new);
         CustomerEntity customerEntity = customerRepository.findById(customerTo.getId())
@@ -112,13 +111,13 @@ public class CustomerServiceImpl implements CustomerService {
         apartmentEntity.setStatus(BOOKED);
         ApartmentEntity updatedApartment = apartmentRepository.save(apartmentEntity);
 
-        customerEntity.addApartmentToCustomer(updatedApartment);
+        customerEntity.getApartments().add(updatedApartment);
         CustomerEntity updatedCustomer = customerRepository.save(customerEntity);
 
         return CustomerMapper.toCustomerTo(updatedCustomer);
     }
 
-    private void validateEntryDataForBooking(CustomerEntity customerEntity) {
+    private void validateEntryDataForBooking(CustomerEntity customerEntity) throws ToManyBookingsException {
         List<ApartmentEntity> bookedApartments = customerEntity
                 .getApartments()
                 .stream()
@@ -149,7 +148,10 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Double calculateApartmentsTotalPriceBoughtBySpecifiedCustomer(CustomerTo customerTo) {
+    public Double calculateApartmentsTotalPriceBoughtBySpecifiedCustomer(CustomerTo customerTo) throws CustomerNotFoundException {
+        if (customerTo.getId() == null || !customerRepository.existsById(customerTo.getId())) {
+            throw new CustomerNotFoundException();
+        }
         return customerRepository
                 .calculateApartmentsTotalPriceBoughtBySpecifiedCustomer(customerTo.getId());
     }

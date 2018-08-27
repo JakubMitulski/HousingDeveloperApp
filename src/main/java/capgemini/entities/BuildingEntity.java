@@ -2,7 +2,6 @@ package capgemini.entities;
 
 import capgemini.entities.listeners.CreateListener;
 import capgemini.entities.listeners.UpdateListener;
-import capgemini.exception.ApartmentNotFoundException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,30 +23,17 @@ public class BuildingEntity extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(45) DEFAULT ''")
     private String description;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(45) DEFAULT ''")
     private String location;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 0")
     private Integer floorsAmount;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean hasElevator;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 0")
     private Integer apartmentsAmount;
 
     @OneToMany(mappedBy = "building", cascade = CascadeType.REMOVE)
     private List<ApartmentEntity> apartments = new ArrayList<>();
-
-    public void addApartmentToBuilding(ApartmentEntity apartmentEntity) {
-        this.apartments.add(apartmentEntity);
-    }
-
-    public void removeApartmentFromBuilding(ApartmentEntity apartmentEntity) {
-        ApartmentEntity entity = this.apartments
-                .stream()
-                .filter(apartment -> apartment.getId() == apartmentEntity.getId())
-                .findAny()
-                .orElseThrow(ApartmentNotFoundException::new);
-        this.apartments.remove(entity);
-    }
 }
