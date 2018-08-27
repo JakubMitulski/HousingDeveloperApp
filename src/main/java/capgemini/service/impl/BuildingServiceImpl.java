@@ -76,6 +76,13 @@ public class BuildingServiceImpl implements BuildingService {
         buildingRepository.deleteById(buildingTo.getId());
     }
 
+    /**
+     * Method calculates the apartment's average price in a specified building.
+     *
+     * @param buildingTo
+     * @return price
+     * @throws BuildingNotFoundException
+     */
     @Override
     public Double calculateAvgApartmentPriceOfBuilding(BuildingTo buildingTo) throws BuildingNotFoundException {
         if (buildingTo.getId() == null || !buildingRepository.existsById(buildingTo.getId())) {
@@ -84,6 +91,14 @@ public class BuildingServiceImpl implements BuildingService {
         return buildingRepository.calculateAvgApartmentPriceOfBuilding(buildingTo.getId());
     }
 
+    /**
+     * Method counts apartments with given status at given building.
+     *
+     * @param status
+     * @param buildingTo
+     * @return counting result
+     * @throws BuildingNotFoundException
+     */
     @Override
     public Long countApartmentsWithSpecifiedStatusInSpecifiedBuilding(String status, BuildingTo buildingTo) throws BuildingNotFoundException {
         if (buildingTo.getId() == null || !buildingRepository.existsById(buildingTo.getId())) {
@@ -93,6 +108,11 @@ public class BuildingServiceImpl implements BuildingService {
                 .countApartmentsWithSpecifiedStatusInSpecifiedBuilding(status, buildingTo.getId());
     }
 
+    /**
+     * Method searches for building with the largest amount of apartments with status 'available'.
+     *
+     * @return list with one (or more) building(s) with largest amount of available apartments.
+     */
     @Override
     public List<BuildingTo> findBuildingWithLargestAmountOfAvailableApartments() {
         List<BuildingEntity> buildingEntities = buildingRepository

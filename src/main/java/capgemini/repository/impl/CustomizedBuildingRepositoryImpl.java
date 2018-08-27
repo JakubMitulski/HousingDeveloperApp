@@ -19,6 +19,12 @@ public class CustomizedBuildingRepositoryImpl extends AbstractRepository<Apartme
     @PersistenceContext
     private EntityManager em;
 
+    /**
+     * Method calculates the apartment's average price at the specified building.
+     *
+     * @param buildingId
+     * @return price
+     */
     @Override
     public Double calculateAvgApartmentPriceOfBuilding(Long buildingId) {
         TypedQuery<Double> query = entityManager.createQuery(
@@ -28,6 +34,13 @@ public class CustomizedBuildingRepositoryImpl extends AbstractRepository<Apartme
         return query.getSingleResult();
     }
 
+    /**
+     * Method counts apartments with the given status at the given building.
+     *
+     * @param status
+     * @param buildingId
+     * @return counting result
+     */
     @Override
     public Long countApartmentsWithSpecifiedStatusInSpecifiedBuilding(String status, Long buildingId) {
         TypedQuery<Long> query = entityManager.createQuery(
@@ -39,6 +52,11 @@ public class CustomizedBuildingRepositoryImpl extends AbstractRepository<Apartme
         return query.getSingleResult();
     }
 
+    /**
+     * Method searches for a building with the largest amount of apartments with the 'available' status.
+     *
+     * @return list with one (or more) building(s) with largest amount of available apartments.
+     */
     @Override
     public List<BuildingEntity> findBuildingWithLargestAmountOfAvailableApartments() {
         JPAQuery<BuildingEntity> query1 = new JPAQuery<>(em);

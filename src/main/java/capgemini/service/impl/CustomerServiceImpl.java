@@ -83,6 +83,15 @@ public class CustomerServiceImpl implements CustomerService {
         return CustomerMapper.map2Tos(customers);
     }
 
+    /**
+     * Method for buying specified apartment by specified customer.
+     *
+     * @param apartmentTo
+     * @param customerTo
+     * @return customer with updated apartments list.
+     * @throws ApartmentNotFoundException
+     * @throws CustomerNotFoundException
+     */
     @Override
     public CustomerTo buyApartment(ApartmentTo apartmentTo, CustomerTo customerTo) throws ApartmentNotFoundException, CustomerNotFoundException {
         ApartmentEntity apartmentEntity = apartmentRepository.findById(apartmentTo.getId())
@@ -99,6 +108,16 @@ public class CustomerServiceImpl implements CustomerService {
         return CustomerMapper.toCustomerTo(updatedCustomer);
     }
 
+    /**
+     * Method for booking specified apartment by specified customer.
+     *
+     * @param apartmentTo
+     * @param customerTo
+     * @return customer with updated apartments list.
+     * @throws ApartmentNotFoundException
+     * @throws CustomerNotFoundException
+     * @throws ToManyBookingsException
+     */
     @Override
     public CustomerTo bookApartment(ApartmentTo apartmentTo, CustomerTo customerTo) throws ApartmentNotFoundException, CustomerNotFoundException, ToManyBookingsException {
         ApartmentEntity apartmentEntity = apartmentRepository.findById(apartmentTo.getId())
@@ -117,6 +136,13 @@ public class CustomerServiceImpl implements CustomerService {
         return CustomerMapper.toCustomerTo(updatedCustomer);
     }
 
+    /**
+     * Auxiliary method for apartment booking validation. It does not allow to book more than three apartments
+     * by a specified customer, unless customer has co-owner.
+     *
+     * @param customerEntity
+     * @throws ToManyBookingsException
+     */
     private void validateEntryDataForBooking(CustomerEntity customerEntity) throws ToManyBookingsException {
         List<ApartmentEntity> bookedApartments = customerEntity
                 .getApartments()
@@ -140,6 +166,11 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
+    /**
+     * Method returns list of customers who has bought more than one apartment.
+     *
+     * @return result list of customers.
+     */
     @Override
     public List<CustomerTo> findCustomersWhoBoughtMoreThanOneApartment() {
         List<CustomerEntity> customerEntities = customerRepository
@@ -147,6 +178,13 @@ public class CustomerServiceImpl implements CustomerService {
         return CustomerMapper.map2Tos(customerEntities);
     }
 
+    /**
+     * Method calculates total price of the apartments purchased by the given customer.
+     *
+     * @param customerTo
+     * @return calculated price.
+     * @throws CustomerNotFoundException
+     */
     @Override
     public Double calculateApartmentsTotalPriceBoughtBySpecifiedCustomer(CustomerTo customerTo) throws CustomerNotFoundException {
         if (customerTo.getId() == null || !customerRepository.existsById(customerTo.getId())) {

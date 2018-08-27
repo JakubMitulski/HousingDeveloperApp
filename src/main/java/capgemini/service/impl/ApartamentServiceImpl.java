@@ -93,6 +93,13 @@ public class ApartamentServiceImpl implements ApartmentService {
         apartmentRepository.deleteById(apartmentTo.getId());
     }
 
+    /**
+     * Method for searching apartments by given criteria: min/max area, min/max rooms amount
+     * and min/max balconies amount.
+     *
+     * @param criteriaApartmentTo is a storage object for criteria.
+     * @return apartment DTO
+     */
     @Override
     public List<ApartmentTo> findApartmentsByCriteria(CriteriaApartmentTo criteriaApartmentTo) {
         List<ApartmentEntity> apartmentEntities = apartmentRepository
@@ -100,6 +107,12 @@ public class ApartamentServiceImpl implements ApartmentService {
         return ApartmentMapper.map2Tos(apartmentEntities);
     }
 
+    /**
+     * Method for searching apartments for people with disabilities, that means in a building
+     * with elevator or at the ground floor.
+     *
+     * @return apartment DTO
+     */
     @Override
     public List<ApartmentTo> findAllApartmentsInBuildingWithElevatorOrOnGroundFloor() {
         List<ApartmentEntity> apartmentEntities = apartmentRepository

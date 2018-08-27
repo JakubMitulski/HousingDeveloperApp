@@ -11,6 +11,12 @@ import java.util.List;
 @Repository
 public class CustomizedCustomerRepositoryImpl extends AbstractRepository<ApartmentEntity, Long> implements CustomizedCustomerRepository {
 
+    /**
+     * Method calculates a total price of the apartments purchased by the given customer.
+     *
+     * @param customerId
+     * @return calculated price.
+     */
     @Override
     public Double calculateApartmentsTotalPriceBoughtBySpecifiedCustomer(Long customerId) {
         TypedQuery<Double> query = entityManager.createQuery(
@@ -22,6 +28,11 @@ public class CustomizedCustomerRepositoryImpl extends AbstractRepository<Apartme
         return query.getSingleResult();
     }
 
+    /**
+     * Method returns a list of customers who has bought more than one apartment.
+     *
+     * @return result list of customers.
+     */
     @Override
     public List<CustomerEntity> findCustomersWhoBoughtMoreThanOneApartment() {
         TypedQuery<CustomerEntity> query = entityManager.createQuery(

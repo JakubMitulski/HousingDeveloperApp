@@ -11,6 +11,13 @@ import java.util.List;
 @Repository
 public class CustomizedApartmentRepositoryImpl extends AbstractRepository<ApartmentEntity, Long> implements CustomizedApartmentRepository {
 
+    /**
+     * Method for searching apartments by given criteria: min/max area, min/max rooms amount
+     * and min/max balconies amount.
+     *
+     * @param criteriaApartmentTo is a storage object for criteria.
+     * @return apartment entity
+     */
     @Override
     public List<ApartmentEntity> findApartmentsByCriteria(CriteriaApartmentTo criteriaApartmentTo) {
         StringBuilder queryBuilder = new StringBuilder();
@@ -59,6 +66,12 @@ public class CustomizedApartmentRepositoryImpl extends AbstractRepository<Apartm
         return query.getResultList();
     }
 
+    /**
+     * Method for searching apartments for people with disabilities, that means in a building
+     * with elevator or at the ground floor.
+     *
+     * @return apartment entity
+     */
     @Override
     public List<ApartmentEntity> findAllApartmentsInBuildingWithElevatorOrOnGroundFloor() {
         TypedQuery<ApartmentEntity> query = entityManager.createQuery(
