@@ -19,7 +19,7 @@ public class ApartmentEntity extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(nullable = false,  columnDefinition = "DOUBLE DEFAULT 0.0")
+    @Column(nullable = false, columnDefinition = "DOUBLE DEFAULT 0.0")
     private Double area;
     @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 0")
     private Integer roomsAmount;

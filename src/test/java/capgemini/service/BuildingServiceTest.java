@@ -267,7 +267,7 @@ public class BuildingServiceTest {
 
     @Test
     @Transactional
-    public void shouldFindBuildingWithLargestAmountOfAvailableApartments(){
+    public void shouldFindBuildingWithLargestAmountOfAvailableApartments() {
         //Given
         int resultListSize = 2;
 

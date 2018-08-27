@@ -101,7 +101,7 @@ public class ApartamentServiceImpl implements ApartmentService {
     }
 
     @Override
-    public List<ApartmentTo> findAllApartmentsInBuildingWithElevatorOrOnGroundFloor(){
+    public List<ApartmentTo> findAllApartmentsInBuildingWithElevatorOrOnGroundFloor() {
         List<ApartmentEntity> apartmentEntities = apartmentRepository
                 .findAllApartmentsInBuildingWithElevatorOrOnGroundFloor();
         return ApartmentMapper.map2Tos(apartmentEntities);

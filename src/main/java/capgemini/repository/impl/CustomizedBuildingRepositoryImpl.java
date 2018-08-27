@@ -55,7 +55,7 @@ public class CustomizedBuildingRepositoryImpl extends AbstractRepository<Apartme
                 .orderBy(building.id.count().desc())
                 .fetchFirst();
 
-        if (largestAmount == null){
+        if (largestAmount == null) {
             largestAmount = 0L;
         }
 
