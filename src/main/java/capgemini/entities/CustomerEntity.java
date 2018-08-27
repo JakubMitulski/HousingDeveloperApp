@@ -18,8 +18,6 @@ import java.util.List;
 @Table(name = "customers")
 public class CustomerEntity extends AbstractEntity implements Serializable {
 
-    @Version
-    private int version;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

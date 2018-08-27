@@ -16,8 +16,6 @@ import java.io.Serializable;
 @Table(name = "apartments")
 public class ApartmentEntity extends AbstractEntity implements Serializable {
 
-    @Version
-    private int version;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

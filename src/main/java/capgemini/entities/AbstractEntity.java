@@ -1,14 +1,14 @@
 package capgemini.entities;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Date;
 
 @MappedSuperclass
 public abstract class AbstractEntity {
+
+    @Version
+    private int version;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created", nullable = false, updatable = false)
@@ -32,5 +32,13 @@ public abstract class AbstractEntity {
 
     public void setUpdated(final Timestamp updated) {
         this.updated = updated;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }
