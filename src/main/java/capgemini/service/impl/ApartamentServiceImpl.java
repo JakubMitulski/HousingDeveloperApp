@@ -43,7 +43,6 @@ public class ApartamentServiceImpl implements ApartmentService {
         ApartmentEntity savedApartment = apartmentRepository.save(apartmentEntity);
 
         buildingEntity.getApartments().add(apartmentEntity);
-        buildingRepository.save(buildingEntity);
 
         return ApartmentMapper.toApartmentTo(savedApartment);
     }

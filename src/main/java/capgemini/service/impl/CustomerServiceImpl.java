@@ -47,7 +47,7 @@ public class CustomerServiceImpl implements CustomerService {
         customerEntity.setApartments(apartments);
 
         CustomerEntity savedCustomer = customerRepository.save(customerEntity);
-        return CustomerMapper.toCustomerTo(customerEntity);
+        return CustomerMapper.toCustomerTo(savedCustomer);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class CustomerServiceImpl implements CustomerService {
         customerEntity.setApartments(apartments);
 
         CustomerEntity savedCustomer = customerRepository.save(customerEntity);
-        return CustomerMapper.toCustomerTo(customerEntity);
+        return CustomerMapper.toCustomerTo(savedCustomer);
     }
 
     @Override
@@ -100,9 +100,8 @@ public class CustomerServiceImpl implements CustomerService {
                 .orElseThrow(CustomerNotFoundException::new);
 
         apartmentEntity.setStatus(BOUGHT);
-        ApartmentEntity updatedApartment = apartmentRepository.save(apartmentEntity);
 
-        customerEntity.getApartments().add(updatedApartment);
+        customerEntity.getApartments().add(apartmentEntity);
         CustomerEntity updatedCustomer = customerRepository.save(customerEntity);
 
         return CustomerMapper.toCustomerTo(updatedCustomer);
@@ -128,9 +127,8 @@ public class CustomerServiceImpl implements CustomerService {
         validateEntryDataForBooking(customerEntity);
 
         apartmentEntity.setStatus(BOOKED);
-        ApartmentEntity updatedApartment = apartmentRepository.save(apartmentEntity);
 
-        customerEntity.getApartments().add(updatedApartment);
+        customerEntity.getApartments().add(apartmentEntity);
         CustomerEntity updatedCustomer = customerRepository.save(customerEntity);
 
         return CustomerMapper.toCustomerTo(updatedCustomer);
